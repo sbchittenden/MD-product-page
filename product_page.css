@@ -1,0 +1,22 @@
+.row {
+  width: 100%;
+  margin: 1em auto;
+}
+
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.col-3 {
+  float: left;
+  width: 33.3333%;
+}
+
+[class*='col-'] {
+  padding-right: 20px;
+}
+[class*='col-']:last-of-type {
+  padding-right: 0;
+}
