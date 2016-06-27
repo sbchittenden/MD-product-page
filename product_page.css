@@ -12,8 +12,54 @@ body {
     background-color: #4c311a;
 }
 
-.product_name {
+h1, h2 {
 	font-family: 'Courgette', 'Helvetica', 'Arial', sans-serif;
+}
+
+#logo-header h1 {
+	font-size: 5em;
+	margin-bottom: 0;
+	padding-top: 2.5em;
+}
+
+#logo-header h2 {
+	font-size: 2.5em;
+	margin-top: 0;
+}
+
+/* -----------------------
+sally smith image styles
+------------------------- */
+#logo-header {
+	position: relative;
+	text-align: center;
+	margin-top: 2em;
+}
+
+#sally-smith:before {
+    content: '';
+    width: 13.250em;
+    height: 13.250em;
+    border: dashed 2px #fcf6ea;
+    position: absolute;
+    top: -0.875em;
+    left: -0.875em;
+    border-radius: 50%;
+}
+
+#sally-smith {
+    background-image: url(img/sally_smith.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-color: #fcf6ea;
+    border-radius: 50%;
+    width: 12.5em;
+    height: 12.5em;
+    border: solid 8px #764C29;
+    position: absolute;
+    top: -1em;
+    left: 50%;
+    transform: translate(-50%);
 }
 
 /* -----------------------
@@ -21,8 +67,8 @@ body {
  ------------------------- */
 
 .row {
-  width: 90%;
-  margin: 1em auto;
+  max-width: 70em;
+  margin: 1em auto 2em auto;
 }
 
 .row:after {
@@ -47,4 +93,66 @@ body {
   padding-right: 0;
 }
 
+/* --------------------
+ Product listing styles 
+ ---------------------- */
 
+.product_card {
+	padding-left: 1.25em;
+}
+
+.product_img {
+	border: solid 2px #fcf6ea;
+	border-radius: 0.5em;
+}
+
+/* -----------------------
+Qty select styles
+------------------------- */
+
+select {
+  outline: none;
+  height: 2em;
+  border-radius: 3px;
+  padding-left: 0.4em;
+  border: solid 1px #cccbc9;
+  background-color: #fcf6ea;
+  outline: none;
+  color: #4c311a;
+}
+
+select:focus, input:focus {
+  border: dashed 1px #4c311a;
+}
+
+/* ------------------------------------
+Button styling
+--------------------------------------- */
+.button:focus {
+  outline: none;
+}
+
+.button {
+  vertical-align: bottom;
+  display: inline-block;
+  color: #fcf6ea;
+  background-color: #764C29;
+  text-align: center;
+  padding: 0.3em 1.5em 0.3em 1.5em;
+  border: dashed 2px #fcf6ea;
+  border-radius: 3px;
+  cursor: pointer;
+  margin-top: 1.2em;
+  /*width: 100%;*/
+}
+
+.button:hover { 
+  color: #4c311a;
+  background-color: #fcf6ea;
+}
+
+.button:active {
+  color: #fcf6ea;
+  background-color: #4c311a;
+  border: dashed 2px #fcf6ea;
+}
