@@ -20,6 +20,7 @@ h1, h2 {
 	font-size: 5em;
 	margin-bottom: 0;
 	padding-top: 2.5em;
+	text-shadow: 4px 4px #382413;
 }
 
 #logo-header h2 {
@@ -102,8 +103,9 @@ sally smith image styles
 }
 
 .product_img {
-	border: solid 2px #fcf6ea;
+	box-shadow: 0.25em 0.25em #382413;
 	border-radius: 0.5em;
+	background-color: #fcf6ea;
 }
 
 /* -----------------------
