@@ -1,5 +1,27 @@
+@import 'https://fonts.googleapis.com/css?family=Open+Sans|Ubuntu';
+@import url(https://fonts.googleapis.com/css?family=Courgette);
+
+*, *:before, *:after {
+  box-sizing: border-box;
+}
+
+body {
+    font-size: 16px;
+    font-family: 'Open Sans', 'Helvetica', 'Arial', sans-serif;
+    color: #fcf1db;
+    background-color: #4c311a;
+}
+
+.product_name {
+	font-family: 'Courgette', 'Helvetica', 'Arial', sans-serif;
+}
+
+/* -----------------------
+ grid styles
+ ------------------------- */
+
 .row {
-  width: 100%;
+  width: 90%;
   margin: 1em auto;
 }
 
@@ -9,14 +31,20 @@
   clear: both;
 }
 
+.col-1 {
+	width: 100%;
+}
+
 .col-3 {
   float: left;
   width: 33.3333%;
 }
 
 [class*='col-'] {
-  padding-right: 20px;
+  padding-right: 2em;
 }
 [class*='col-']:last-of-type {
   padding-right: 0;
 }
+
+
