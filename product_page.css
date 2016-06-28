@@ -87,6 +87,17 @@ sally smith image styles
   width: 33.3333%;
 }
 
+.col-3-6 {
+	float: left;
+	width: 59.9999%;
+	padding-left: 1.25em;
+}
+
+.col-1-6 {
+	float: left;
+	width: 13.3333%;
+}
+
 [class*='col-'] {
   padding-right: 2em;
 }
@@ -108,9 +119,33 @@ sally smith image styles
 	background-color: #fcf6ea;
 }
 
+/* ----------------------
+Shopping Cart styles
+------------------------- */
+
+.cart_list_wrap {
+	color: #4c311a;
+	background-color: #fcf1db;
+	max-width: 70em;
+	margin: 1em auto;
+	padding: 0.5em;
+	border-radius: 0.5em;
+}
+
+.cart_row {
+	padding-bottom: 0.5em;
+	border-bottom: dashed 1px #4c311a;
+}
+
 /* -----------------------
 Qty select styles
 ------------------------- */
+.qty_input {
+	display: inline-block;
+	width: 50%;
+  margin-left: 0.5em;
+  padding-left: 0.2em;
+}
 
 select {
   outline: none;
