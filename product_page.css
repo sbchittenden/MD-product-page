@@ -10,6 +10,7 @@ body {
     font-family: 'Open Sans', 'Helvetica', 'Arial', sans-serif;
     color: #fcf1db;
     background-color: #4c311a;
+    background-image: url(img/breakfast_bg.png);
 }
 
 h1, h2 {
@@ -87,15 +88,15 @@ sally smith image styles
   width: 33.3333%;
 }
 
-.col-3-6 {
+.col-2-6 {
 	float: left;
-	width: 59.9999%;
+	width: 50%;
 	padding-left: 1.25em;
 }
 
 .col-1-6 {
 	float: left;
-	width: 13.3333%;
+	width: 12.5%;
 }
 
 [class*='col-'] {
@@ -135,6 +136,7 @@ Shopping Cart styles
 .cart_row {
 	padding-bottom: 0.5em;
 	border-bottom: dashed 1px #4c311a;
+	margin-bottom: 1em;
 }
 
 /* -----------------------

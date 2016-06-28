@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Product Page and Shopping Cart</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.1.1/normalize.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
     <link rel="stylesheet" href="product_page.css">
 
 </head>
@@ -288,9 +289,21 @@
   <!-- shopping cart section -->
 	<div class="cart_list_wrap">
 		<div class="row cart_row">
-			<div class="col-3-6">
+			<div class="col-2-6">
 				French Toast (2 slices)
 			</div>
+			<div class="col-1-6">Unit Price</div>
+			<div class="col-1-6">
+				<label>Qty:<input type="text" value="1" maxlength="5	" class="qty_input"></label>
+			</div>
+			<div class="col-1-6"><button class="cart_button"><i class="fa fa-times" aria-hidden="true"></i> Remove</button></div>
+			<div class="col-1-6">subtotal</div>
+		</div>
+		<div class="row cart_row">
+			<div class="col-2-6">
+				Pancake
+			</div>
+			<div class="col-1-6">Unit Price</div>
 			<div class="col-1-6">
 				<label>Qty:<input type="text" value="1" maxlength="5	" class="qty_input"></label>
 			</div>
@@ -298,19 +311,10 @@
 			<div class="col-1-6">subtotal</div>
 		</div>
 		<div class="row cart_row">
-			<div class="col-3-6">
-				Item name and short description here
+			<div class="col-2-6">
+				Bacon
 			</div>
-			<div class="col-1-6">
-				<label>Qty:<input type="text" value="1" maxlength="5	" class="qty_input"></label>
-			</div>
-			<div class="col-1-6">remove</div>
-			<div class="col-1-6">subtotal</div>
-		</div>
-		<div class="row cart_row">
-			<div class="col-3-6">
-				Item name and short description here
-			</div>
+			<div class="col-1-6">Unit Price</div>
 			<div class="col-1-6">
 				<label>Qty:<input type="text" value="1" maxlength="5	" class="qty_input"></label>
 			</div>
