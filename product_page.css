@@ -104,13 +104,14 @@ sally smith image styles
   width: 33.3333%;
 }
 
-.col-2-6 {
+
+.col-1-2 {
 	float: left;
 	width: 50%;
 	padding-left: 1.25em;
 }
 
-.col-1-6 {
+.col-1-8 {
 	float: left;
 	width: 12.5%;
 }
@@ -171,6 +172,10 @@ Shopping Cart styles
 	margin-bottom: 1em;
 }
 
+.cart_row .col-1-8, .cart_head .col-1-8 {
+	text-align: center;
+}
+
 .cart_row:last-of-type {
 	border-bottom: dashed 2px #4c311a;
 }
@@ -208,7 +213,6 @@ Button styling
 }
 
 .button {
-  vertical-align: bottom;
   display: inline-block;
   color: #fcf6ea;
   background-color: #764C29;
@@ -218,7 +222,6 @@ Button styling
   border-radius: 3px;
   cursor: pointer;
   margin-top: 1.2em;
-  /*width: 100%;*/
 }
 
 .button:hover { 
@@ -230,4 +233,20 @@ Button styling
   color: #fcf6ea;
   background-color: #4c311a;
   border: dashed 2px #fcf6ea;
+}
+
+.cart_button {
+	color: #4c311a;
+	background-color: #fcf1db;
+	margin: 0;
+	padding: 0;
+}
+
+.cart_button:hover {
+	color: red;
+	background-color: #fcf1db;
+}
+
+.cart_button:active {
+	opacity: 0.6;	
 }
