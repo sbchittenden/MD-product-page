@@ -38,7 +38,7 @@ sally smith image styles
 	margin-top: 2em;
 }
 
-#sally-smith:before {
+.sally-smith-head:before {
     content: '';
     width: 13.250em;
     height: 13.250em;
@@ -49,7 +49,7 @@ sally smith image styles
     border-radius: 50%;
 }
 
-#sally-smith {
+.sally-smith-head {
     background-image: url(img/sally_smith.png);
     background-repeat: no-repeat;
     background-size: contain;
@@ -64,6 +64,22 @@ sally smith image styles
     transform: translate(-50%);
 }
 
+.small-head {
+	width: 6.25em;
+	height: 6.25em;
+	border: solid 4px #764C29;
+  top: 1.5em;
+  left: 6em;
+}
+
+.sally-smith-head.small-head:before {
+	content: '';
+  width: 6.625em;
+  height: 6.625em;
+  border: dashed 1px #4c311a;
+  top: -0.438em;
+  left: -0.438em;
+}
 /* -----------------------
  grid styles
  ------------------------- */
@@ -129,14 +145,34 @@ Shopping Cart styles
 	background-color: #fcf1db;
 	max-width: 70em;
 	margin: 1em auto;
-	padding: 0.5em;
+	padding: 2.25em;
 	border-radius: 0.5em;
+	position: relative;
+}
+
+.cart_logo {
+	padding-left: 8em;
+	margin-bottom: 3em; 
+}
+
+.cart_head {
+	padding-bottom: 0.5em;
+	border-bottom: dashed 2px #4c311a;
+	margin-bottom: 1em;
+	margin-top: 0;
+	font-size: 1.25em;
+	font-family: 'Courgette', 'Helvetica', sans-serif;
 }
 
 .cart_row {
-	padding-bottom: 0.5em;
-	border-bottom: dashed 1px #4c311a;
+	padding-bottom: 1em;
+	padding-top: 0.5em;
+	border-bottom: dashed 1px #c6bdad;
 	margin-bottom: 1em;
+}
+
+.cart_row:last-of-type {
+	border-bottom: dashed 2px #4c311a;
 }
 
 /* -----------------------
