@@ -144,6 +144,9 @@ sally smith image styles
 	background-color: #fcf6ea;
 }
 
+.product_card p {
+	padding-right: 2em;
+}
 /* ----------------------
 Shopping Cart styles
 ------------------------- */
