@@ -111,6 +111,12 @@ sally smith image styles
 	padding-left: 1.25em;
 }
 
+.col-3-4 {
+	float: left;
+	width: 75%;
+	padding-left: 1.25em;
+}
+
 .col-1-8 {
 	float: left;
 	width: 12.5%;
@@ -173,11 +179,43 @@ Shopping Cart styles
 }
 
 .cart_row .col-1-8, .cart_head .col-1-8 {
-	text-align: center;
+	text-align: right;
 }
 
 .cart_row:last-of-type {
 	border-bottom: dashed 2px #4c311a;
+}
+
+.col_empty {
+	visibility: hidden;
+}
+
+.subtotal {
+	margin-bottom: 1em;
+}
+
+.subtotal .col-1-8 {
+	text-align: right;
+	padding-right: 0;
+	font-weight: bold;
+}
+
+input#discount_code {
+  height: 2.5em;
+  width: 15em;
+  padding-left: 0.25em;
+}
+
+.total [class*='col-'] {
+	padding-top: 0.5em;
+}
+
+.total .col-1-8 {
+	font-weight: bold;
+	font-size: 1.5em;
+	text-align: right;
+	border-top: dashed 1px #4c311a;
+	padding-right: 0;
 }
 
 /* -----------------------
