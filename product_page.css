@@ -205,6 +205,8 @@ input#discount_code {
   height: 2.5em;
   width: 15em;
   padding-left: 0.25em;
+  border: none;
+  border-radius: 3px 0px 0px 3px;
 }
 
 .total [class*='col-'] {
@@ -239,6 +241,8 @@ Qty select styles
 	width: 50%;
   margin-left: 0.5em;
   padding-left: 0.2em;
+  border: none;
+  border-radius: 3px;
 }
 
 select {
@@ -304,18 +308,26 @@ Button styling
 	opacity: 0.6;	
 }
 
+#discount_button {
+  border: none;
+  margin-left: -0.313em;
+  height: 2.5em;
+  border-radius: 0px 3px 3px 0px;
+  padding: 0.438em;
+}
+
 #continue_shop, #checkout {
 	border: none;
 	font-size: 1.5em;
 	font-family: 'Courgette';
 }
 
-#continue_shop:hover, #checkout:hover {
+#continue_shop:hover, #checkout:hover, #discount_button:hover {
 	color: #fcf1db;
 	background-color: #4c311a;
 }
 
-#continue_shop:active, #checkout:active {
+#continue_shop:active, #checkout:active, #discount_button:active {
 	color: #fcf1db;
 	background-color: #87D37C;
 }
