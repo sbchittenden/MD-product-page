@@ -282,7 +282,7 @@ Button styling
 
 .button:active {
   color: #fcf6ea;
-  background-color: #4c311a;
+  background-color: #87D37C;
   border: dashed 2px #fcf6ea;
 }
 
@@ -295,7 +295,7 @@ Button styling
 }
 
 .cart_button:hover {
-	color: red;
+	color: #D91E18;
 	background-color: #fcf1db;
 }
 
@@ -312,5 +312,10 @@ Button styling
 #continue_shop:hover, #checkout:hover {
 	color: #fcf1db;
 	background-color: #4c311a;
+}
+
+#continue_shop:active, #checkout:active {
+	color: #fcf1db;
+	background-color: #87D37C;
 }
 
