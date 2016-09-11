@@ -2,9 +2,10 @@
 // Shopping cart //
 ///////////////////
 
-// retrieve product card divs
+// retrieve product divs
 var friedEgg = document.getElementById('FriedEgg');
 var bacon = document.getElementById('Bacon');
+
 
 // get plate div (item listing section)
 var plate = document.getElementById('plate');
@@ -110,7 +111,7 @@ function getItemDetails (item) {
 		}
 
 	// store item details in array 
-	var parameterArray = [itemName, itemPrice, itemQty];
+	var parameterArray = [itemName, itemQty, itemPrice];
 	
 	// return parameter array
 	return parameterArray;
@@ -120,7 +121,7 @@ function getItemDetails (item) {
 
 
 // test event
-bacon.addEventListener('click', function(){
+bacon.querySelector('.button').addEventListener('click', function(){
 	var itemDetails = getItemDetails(bacon);
 	addToPlate(itemDetails[0], itemDetails[1], itemDetails[2]);
 });
