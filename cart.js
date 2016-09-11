@@ -84,7 +84,43 @@ function addToPlate (nameOfItem, qtyOfItem, priceOfItem) {
 
 
 }
+
+//////////////////////////////////////////////////
+// function to get name, qty, and price of item //
+//////////////////////////////////////////////////
+
+function getItemDetails (item) {
+	// get item name 
+	var itemName = item.querySelector('.product_name').innerHTML;
+	// get item price
+	var itemPrice = item.querySelector('.product_price').innerHTML;
+	// remove $ from price and convert to number
+	itemPrice = +(itemPrice.slice(1));
+	// get array of select option elements
+	var itemOptionList = item.getElementsByTagName('option');
+	// var to store item quantity
+	var itemQty;
+	// loop through item option list to find selected option
+		for (var i = 0; i < itemOptionList.length; i++) {
+			// if option selected is true
+			if (itemOptionList[i].selected) {
+				// get item qty and convert to number
+				itemQty = +(itemOptionList[i].innerHTML);
+			}
+		}
+
+	// store item details in array 
+	var parameterArray = [itemName, itemPrice, itemQty];
+	
+	// return parameter array
+	return parameterArray;
+}
+
+
+
+
 // test event
 bacon.addEventListener('click', function(){
-	addToPlate('Bacon', 3, 1.50);
+	var itemDetails = getItemDetails(bacon);
+	addToPlate(itemDetails[0], itemDetails[1], itemDetails[2]);
 });
