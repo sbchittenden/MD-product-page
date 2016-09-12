@@ -136,8 +136,6 @@
 
 
 
-
-
     ////////////////////////////////////////////
     // item addToPlate button event listeners //
     ////////////////////////////////////////////
@@ -223,7 +221,7 @@
 
             // add event listeners for all plate quantity inputs
             for (var i = 0; i < plateQuantities.length; i++) {
-                plateQuantities[i].addEventListener('input', function() {
+                plateQuantities[i].addEventListener('change', function() {
                     // get value from new qty input
                     var newQty = this.value;
 
@@ -275,9 +273,6 @@
 
     // pass in the plate div node, as well as the observer options
     plateWatch.observe(plate, plateConfig);
-
-
-
 
 
 
