@@ -202,52 +202,74 @@
         addToPlate(itemDetails[0], itemDetails[1], itemDetails[2]);
     });
 
+    // mutation observer to watch plate div for any DOM changes
+    var plateWatch = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
 
-    // add event listener to plate div for click event 
-    plate.addEventListener('click', function() {
-        // click event updates plateQuantities array
-        plateQuantities = plate.getElementsByClassName('qty_input');
-        console.log(plateQuantities);
+            ////////////////////
+            // plate elements //
+            ////////////////////
 
-        // add event listeners for all plate quantity inputs
-        for (var i = 0; i < plateQuantities.length; i++) {
+            // addition of items to plate updates plateQuantities array
+            plateQuantities = plate.getElementsByClassName('qty_input');
 
-            plateQuantities[i].addEventListener('input', function() {
-                // get value from new qty input
-                var newQty = this.value;
-
-                // get item subtotal div
-                var subtotalDiv = this.parentNode.parentNode.nextSibling.nextSibling;
-
-                // get item price
-                var itemPrice = this.parentNode.parentNode.nextSibling.innerHTML;
-
-                // remove '$' and convert item price to a number
-                itemPrice = +(itemPrice.slice(1));
-
-                // get current item subtotal
-                var subtotal = subtotalDiv.innerHTML;
-
-                // remove $ from current item subtotal and convert to number
-                subtotal = +(subtotal.slice(1));
-
-                // calculate new item subtotal
-                subtotal = (itemPrice * newQty).toFixed(2);
-
-                // insert new item subtotal in to item subtotal div
-                subtotalDiv.innerHTML = '$' + subtotal;
-            });
-        }
+            // get nodeList of remove button elements from plate
+            var removeButtons = plate.getElementsByClassName('cart_button');
 
 
+            ///////////////////////////////////
+            // plate element event listeners //
+            ///////////////////////////////////
 
+            // add event listeners for all plate quantity inputs
+            for (var i = 0; i < plateQuantities.length; i++) {
+                plateQuantities[i].addEventListener('input', function() {
+                    // get value from new qty input
+                    var newQty = this.value;
+
+                    // get item subtotal div
+                    var subtotalDiv = this.parentNode.parentNode.nextSibling.nextSibling;
+
+                    // get item price
+                    var itemPrice = this.parentNode.parentNode.nextSibling.innerHTML;
+
+                    // remove '$' and convert item price to a number
+                    itemPrice = +(itemPrice.slice(1));
+
+                    // get current item subtotal
+                    var subtotal = subtotalDiv.innerHTML;
+
+                    // remove $ from current item subtotal and convert to number
+                    subtotal = +(subtotal.slice(1));
+
+                    // calculate new item subtotal
+                    subtotal = (itemPrice * newQty).toFixed(2);
+
+                    // insert new item subtotal in to item subtotal div
+                    subtotalDiv.innerHTML = '$' + subtotal;
+                });
+            }
+
+            // add event listeners for remove from plate buttons
+            for (var k = 0; k < removeButtons.length; k++) {
+              removeButtons[k].addEventListener('click', function(){
+                var rowToRemove = this.parentNode.parentNode;
+                plate.removeChild(rowToRemove);
+              });
+            }
+
+
+
+
+
+        });
     });
 
+    // configuration of the plateWatch observer:
+    var plateConfig = { attributes: true, childList: true, characterData: true };
 
-
-
-
-
+    // pass in the plate div node, as well as the observer options
+    plateWatch.observe(plate, plateConfig);
 
 
 
