@@ -227,6 +227,11 @@
                     // get value from new qty input
                     var newQty = this.value;
 
+                    // if newQty is 0 remove item from plate
+                    if (newQty === '0') {
+                        plate.removeChild(this.parentNode.parentNode.parentNode);
+                    }
+
                     // get item subtotal div
                     var subtotalDiv = this.parentNode.parentNode.nextSibling.nextSibling;
 
@@ -252,10 +257,10 @@
 
             // add event listeners for remove from plate buttons
             for (var k = 0; k < removeButtons.length; k++) {
-              removeButtons[k].addEventListener('click', function(){
-                var rowToRemove = this.parentNode.parentNode;
-                plate.removeChild(rowToRemove);
-              });
+                removeButtons[k].addEventListener('click', function() {
+                    var rowToRemove = this.parentNode.parentNode;
+                    plate.removeChild(rowToRemove);
+                });
             }
 
 
