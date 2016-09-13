@@ -40,6 +40,7 @@
             // create plate row
             var cartRow = document.createElement('div');
             cartRow.className = 'row cart_row';
+            cartRow.id = 'plate' + this.productName.replace(' ', '-');
 
             // create item name div
             var itemName = document.createElement('div');
@@ -80,6 +81,7 @@
             itemName.innerHTML = this.productName;
             // set item quantity
             qtyInput.setAttribute('value', this.productQty);
+            qtyInput.classList.add(this.productName.replace(' ', '-'));
             qtyInput.setAttribute('type', 'text');
             qtyInput.setAttribute('maxlength', 5)
                 // set item price
@@ -105,9 +107,9 @@
             plateRows.push(cartRow);
             console.log(plateRows);
             // add to plate
-                plateRows.forEach(function(item) {
-                    plate.appendChild(item);
-                });
+            plateRows.forEach(function(item) {
+                plate.appendChild(item);
+            });
         };
 
 
@@ -129,14 +131,34 @@
         return itemQty;
     }
 
+    // function to update quanitity of item in plate
+    function updateQty(plateID, productObj, newQuantity, inputID) {
+        productObj.productQty += newQuantity;
+        console.log(productObj.productQty);
+        var newQty = productObj.productQty;
+        var plateRow = document.getElementById(plateID);
+        var input = plateRow.getElementsByClassName(inputID);
+        console.log(input[0]);
+        input[0].value = newQty;
+        input[0].setAttribute('value', newQty);
+
+        var qtyChange = new Event("qty-change", { "bubbles": true, "cancelable": false });
+        document.dispatchEvent(qtyChange);
+    }
+
+
+
     ////////////////////////////////////////////
     // item addToPlate button event listeners //
     ////////////////////////////////////////////
 
     egg.querySelector('.button').addEventListener('click', function() {
         var quantity = getQuantity(egg);
+        var plateRow = document.getElementById('plateFried-Egg');
+
         Egg = new Product('Fried Egg', 2.00, quantity);
         Egg.addToPlate();
+
     });
 
     bacon.querySelector('.button').addEventListener('click', function() {
