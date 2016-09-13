@@ -22,12 +22,20 @@
     // get plate div (item listing section)
     var plate = document.getElementById('plate');
 
+    // get subtotal row
+    var subRow = document.getElementById('subtotal');
+
+    // get subtotal amount element
+    var subtotalAmt = document.getElementById('subtotalAmt');
 
     // plate row array
     var plateRows = [];
 
     // plate quantity elements
     var plateQuantities = [];
+
+    // plate item subtotal list
+    var plateItemSubtotals = [];
 
 
 
@@ -40,7 +48,7 @@
             // create plate row
             var cartRow = document.createElement('div');
             cartRow.className = 'row cart_row';
-            cartRow.id = 'plate' + this.productName.replace(' ', '-');
+            cartRow.classList.add('plate' + this.productName.replace(' ', '-'));
 
             // create item name div
             var itemName = document.createElement('div');
@@ -104,12 +112,9 @@
             cartRow.appendChild(itemPrice);
             cartRow.appendChild(rowSubtotal);
 
-            plateRows.push(cartRow);
-            console.log(plateRows);
             // add to plate
-            plateRows.forEach(function(item) {
-                plate.appendChild(item);
-            });
+            plate.appendChild(cartRow);
+
         };
 
 
@@ -154,17 +159,75 @@
 
     egg.querySelector('.button').addEventListener('click', function() {
         var quantity = getQuantity(egg);
-        var plateRow = document.getElementById('plateFried-Egg');
-
-        Egg = new Product('Fried Egg', 2.00, quantity);
+        var Egg = new Product('Fried Egg', 2.00, quantity);
         Egg.addToPlate();
 
     });
 
     bacon.querySelector('.button').addEventListener('click', function() {
         var quantity = getQuantity(bacon);
-        Bacon = new Product('Bacon', 1.00, quantity);
+        var Bacon = new Product('Bacon', 1.00, quantity);
         Bacon.addToPlate();
+    });
+
+    sausage.querySelector('.button').addEventListener('click', function() {
+        var quantity = getQuantity(sausage);
+        var Sausage = new Product('Breakfast Sausage', 1.25, quantity);
+        Sausage.addToPlate();
+    });
+
+    waffle.querySelector('.button').addEventListener('click', function() {
+        var quantity = getQuantity(waffle);
+        var Waffle = new Product('Waffle', 2.50, quantity);
+        Waffle.addToPlate();
+    });
+
+    pancake.querySelector('.button').addEventListener('click', function() {
+        var quantity = getQuantity(pancake);
+        var Pancake = new Product('Pancake', 1.75, quantity);
+        Pancake.addToPlate();
+    });
+
+    hashbrowns.querySelector('.button').addEventListener('click', function() {
+        var quantity = getQuantity(hashbrowns);
+        var Hashbrowns = new Product('Hashbrowns', 2.00, quantity);
+        Hashbrowns.addToPlate();
+    });
+
+    frenchToast.querySelector('.button').addEventListener('click', function() {
+        var quantity = getQuantity(frenchToast);
+        var FrenchToast = new Product('French Toast', 3.75, quantity);
+        FrenchToast.addToPlate();
+    });
+
+    oj.querySelector('.button').addEventListener('click', function() {
+        var quantity = getQuantity(oj);
+        var Oj = new Product('Orange Juice', 1.50, quantity);
+        Oj.addToPlate();
+    });
+
+    coffee.querySelector('.button').addEventListener('click', function() {
+        var quantity = getQuantity(coffee);
+        var Coffee = new Product('Coffee', 1.00, quantity);
+        Coffee.addToPlate();
+    });
+
+    cereal.querySelector('.button').addEventListener('click', function() {
+        var quantity = getQuantity(cereal);
+        var Cereal = new Product('Cereal', 3.25, quantity);
+        Cereal.addToPlate();
+    });
+
+    donut.querySelector('.button').addEventListener('click', function() {
+        var quantity = getQuantity(donut);
+        var Donut = new Product('Donut', 1.50, quantity);
+        Donut.addToPlate();
+    });
+
+    grapefruit.querySelector('.button').addEventListener('click', function() {
+        var quantity = getQuantity(grapefruit);
+        var Grapefruit = new Product('Grapefruit', 2.75, quantity);
+        Grapefruit.addToPlate();
     });
 
 
@@ -181,6 +244,23 @@
 
             // get nodeList of remove button elements from plate
             var removeButtons = plate.getElementsByClassName('cart_button');
+
+            // get nodeList of plate rows
+            plateRows = plate.getElementsByClassName('row');
+            console.log(plateRows.length);
+            console.log(plateRows);
+
+            // get row subtotal values
+            var rowSubtotalList = [];
+            for (var j = 0; j < plateRows.length; j++) {
+                rowSubtotalList.push(+(plateRows[j].lastChild.innerHTML.slice(1)));
+            }
+
+            // update plate subtotal
+            var newplateSub = rowSubtotalList.reduce(function(a, b) {
+                return a + b;
+            });
+            subtotalAmt.innerHTML = '$' + newplateSub.toFixed(2);
 
 
             ///////////////////////////////////
@@ -218,6 +298,20 @@
 
                     // insert new item subtotal in to item subtotal div
                     subtotalDiv.innerHTML = '$' + subtotal;
+
+                    // insert new plate subtotal
+                    // get row subtotal values
+                    rowSubtotalList = [];
+                    for (var j = 0; j < plateRows.length; j++) {
+                        rowSubtotalList.push(+(plateRows[j].lastChild.innerHTML.slice(1)));
+                    }
+
+                    // update plate subtotal
+                    newplateSub = rowSubtotalList.reduce(function(a, b) {
+                        return a + b;
+                    });
+                    subtotalAmt.innerHTML = '$' + newplateSub.toFixed(2);
+
                 });
             }
 
@@ -241,6 +335,16 @@
 
     // pass in the plate div node, as well as the observer options
     plateWatch.observe(plate, plateConfig);
+
+
+
+
+
+
+
+
+
+
 
 
 })(window));
