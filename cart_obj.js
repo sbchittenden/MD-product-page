@@ -98,7 +98,7 @@
             itemName.innerHTML = this.productName;
             // set item quantity
             qtyInput.setAttribute('value', this.productQty);
-            qtyInput.classList.add(this.productName.replace(' ', '-'));
+            //qtyInput.classList.add(this.productName.replace(' ', '-'));
             qtyInput.setAttribute('type', 'text');
             qtyInput.setAttribute('maxlength', 5)
                 // set item price
