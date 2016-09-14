@@ -28,6 +28,15 @@
     // get subtotal amount element
     var subtotalAmt = document.getElementById('subtotalAmt');
 
+    // get discount code element
+    var discountCode = document.getElementById('discount_code');
+
+    // get discount code button
+    var addDiscountBtn = document.getElementById('discount_button');
+
+    // discount codes
+    var validDiscounts = ['DONUTLOVER15', 'SAVE10', '5OFFBFAST'];
+
     // plate row array
     var plateRows = [];
 
@@ -249,6 +258,7 @@
             plateRows = plate.getElementsByClassName('row');
             console.log(plateRows.length);
             console.log(plateRows);
+            console.log(plateRows[0]);
 
             // get row subtotal values
             var rowSubtotalList = [];
@@ -299,14 +309,17 @@
                     // insert new item subtotal in to item subtotal div
                     subtotalDiv.innerHTML = '$' + subtotal;
 
-                    // insert new plate subtotal
-                    // get row subtotal values
+                    ///////////////////////////////
+                    // insert new plate subtotal //
+                    ///////////////////////////////
+
+                    // on qty input change get row subtotal values
                     rowSubtotalList = [];
                     for (var j = 0; j < plateRows.length; j++) {
                         rowSubtotalList.push(+(plateRows[j].lastChild.innerHTML.slice(1)));
                     }
 
-                    // update plate subtotal
+                    // on qty input change update plate subtotal
                     newplateSub = rowSubtotalList.reduce(function(a, b) {
                         return a + b;
                     });
@@ -327,6 +340,7 @@
 
 
 
+
         });
     });
 
@@ -337,7 +351,39 @@
     plateWatch.observe(plate, plateConfig);
 
 
+    // event listener for discount code button click
+    addDiscountBtn.addEventListener('click', function() {
+        var code = discountCode.value;
+        var subtotal = subtotalAmt.innerHTML;
+        subtotal = +(subtotal.slice(1)); 
+        console.log(code);
+        var discountTotal = 0; 
+        if (code === validDiscounts[0]) {
+            for (var i = 0; i < plateRows.length; i++) {
+                if (plateRows[i].className === 'row cart_row plateDonut') {
+                    discountTotal = Donut.productPrice * 0.85;
+                }
+            }
+        } else if (code === validDiscounts[1]) {
+          var highestPrice;
+            for (var k = 0; k < plateRows.length; k++) {
+                var itemPrice = plateQuantities[k].parentNode.parentNode.nextSibling.innerHTML;
+                // remove '$' and convert item price to a number
+                itemPrices.push(+(itemPrice.slice(1)));
+            }
+            itemPrices.sort(function(a,b){
+              return a - b;
+            });
+            highestPrice = +(itemPrices[itemPrices.length-1]);
+            discountTotal = highestPrice * 0.90;
+        } else if (code === validDiscounts[2]) {
+          discountTotal = subtotal *  0.95;
+        } else {
+            console.log('not a valid discount');
+        }
 
+        subtotalAmt.innerHTML = '$' + (subtotal * discountTotal);
+    });
 
 
 
