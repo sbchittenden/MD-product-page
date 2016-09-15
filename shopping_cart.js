@@ -255,9 +255,7 @@ inCart.updateCartSubtotal = function() {
 
 inCart.getDiscountAmount = function() {
     // get the discount amount from the cartDiscount object
-    var discount = cartDiscount.discountAmt;
-    console.log(discount);
-    return discount;
+    return cartDiscount.discountAmt;
 };
 
 inCart.getTotal = function() {
@@ -322,6 +320,7 @@ cartDiscount.applyDiscountCode = function() {
         if (validCodes.indexOf(enteredCode) !== -1) {
             var code = cartDiscount.discountCodes[validCodes.indexOf(enteredCode)];
             cartDiscount.discountAmt = code.discountAmt;
+            console.log(cartDiscount.discountAmt + 'is the discount amount');
         } else {
             // add an alert here that the discount code is invalid
             console.log('invalid discount code!');
