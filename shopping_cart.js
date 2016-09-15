@@ -73,6 +73,7 @@ toPlate.addRemoveEvent = function(productObj) {
         inCart.removeCurrentItem(productObj);
         productObj.plateQty = 0;
         inCart.updateCartSubtotal();
+        cartDiscount.applyDiscountCode();
         inCart.updateCartTotal();
     });
 };
@@ -229,10 +230,11 @@ inCart.removeCurrentItem = function(productObj) {
 inCart.getSubtotal = function() {
     var itemSubtotals = [];
     var cartSubtotal;
+    // push item subtotals of all objects in cart to the itemSubtotals array 
     inCart.currentItems.forEach(function(item) {
         itemSubtotals.push(item.productPrice * item.quantity);
     });
-
+    // if itemSubtotals is not empty add all values together to get to cartSubtotal
     if (itemSubtotals.length > 0) {
         cartSubtotal = itemSubtotals.reduce(function(a, b) {
             return a + b;
@@ -244,24 +246,32 @@ inCart.getSubtotal = function() {
 };
 
 inCart.updateCartSubtotal = function() {
+    // get cart subtotal div
     var cartSubtotalDiv = document.getElementById('subtotalAmt');
+    // update subtotal html with subtotal amount
     var subtotal = inCart.getSubtotal();
     cartSubtotalDiv.innerHTML = '$' + subtotal;
 };
 
 inCart.getDiscountAmount = function() {
+    // get the discount amount from the cartDiscount object
     var discount = cartDiscount.discountAmt;
+    console.log(discount);
     return discount;
 };
 
 inCart.getTotal = function() {
+    // get subtotal and discount amounts
     var subtotal = inCart.getSubtotal();
     var discount = inCart.getDiscountAmount();
+    // return the subtotal minus discount amount
     return (subtotal - discount).toFixed(2);
 };
 
 inCart.updateCartTotal = function() {
+    // get cart total div
     var cartTotalDiv = document.getElementById('totalAmt');
+    // update total div innerHTML with cart total amount
     var total = inCart.getTotal();
     cartTotalDiv.innerHTML = '$' + total;
 };
@@ -270,8 +280,54 @@ inCart.updateCartTotal = function() {
 // discount object methods //
 /////////////////////////////
 
+// initial cart discount is 0 (before any discount codes have been added);
 cartDiscount.discountAmt = 0;
 
+// valid discount code array
+cartDiscount.discountCodes = [
+    take10Off = {
+        code: 'TAKE10OFF',
+        discountAmt: 0.9,
+        ofID: 'singleItem'
+    },
+    take15OffDonuts = {
+        code: '15OFFDONUTS',
+        discountAmt: 0.85,
+        ofID: '011'
+    },
+    take5OffAll = {
+        code: '5OFFBREAKFAST',
+        discountAmt: 0.95,
+        ofID: 'total'
+    }
+];
+
+cartDiscount.getDiscount = function() {
+    return cartDiscount.discountAmt
+};
+
+cartDiscount.applyDiscountCode = function() {
+    // add event listener for discount button
+    var discountBtn = document.getElementById('discount_button');
+    discountBtn.addEventListener('click', function() {
+        // get entered discount code from discount code input field
+        var enteredCode = document.getElementById('discount_code').value;
+        // array of valid codes (from cartDiscount.discountCodes array)
+        var validCodes = [];
+        // loop through valid discount codes and add to validCodes array
+        cartDiscount.discountCodes.forEach(function(item) {
+            validCodes.push(item.code);
+        });
+        // if entered code matches a valid code return the index of the valid code
+        if (validCodes.indexOf(enteredCode) !== -1) {
+            var code = cartDiscount.discountCodes[validCodes.indexOf(enteredCode)];
+            cartDiscount.discountAmt = code.discountAmt;
+        } else {
+            // add an alert here that the discount code is invalid
+            console.log('invalid discount code!');
+        }
+    });
+};
 
 /* 
 the addButton function adds functionality to the 'add to plate' buttons:
@@ -294,6 +350,7 @@ var addButton = function(button, productObj) {
             toPlate.addRemoveEvent(productObj);
             inCart.updateCurrentItem(productObj);
             inCart.updateCartSubtotal();
+            cartDiscount.applyDiscountCode();
             inCart.updateCartTotal();
         } else {
             row = toPlate.buildPlateRow(productObj);
@@ -301,6 +358,7 @@ var addButton = function(button, productObj) {
             toPlate.addRemoveEvent(productObj);
             inCart.addCurrentItem(productObj);
             inCart.updateCartSubtotal();
+            cartDiscount.applyDiscountCode();
             inCart.updateCartTotal();
         }
     });
