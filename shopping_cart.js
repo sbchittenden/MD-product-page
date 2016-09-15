@@ -1,14 +1,18 @@
+var donutButton = document.getElementById('add_011');
+
 var plate = document.getElementById('plate');
 
 var donutObj = {};
 var Plate = {};
+var itemButton = {};
 
 donutObj.productName = 'Donut';
 donutObj.productDiv = document.getElementById('Donut');
 donutObj.productPrice = 1.50;
 donutObj.onPlate = false;
 donutObj.productID = '011';
-donutObj.productQty = function() {
+donutObj.plateQty = 0;
+donutObj.getQty = function() {
     var itemOptionList = donutObj.productDiv.getElementsByTagName('option');
     // var to store item quantity
     var itemQty;
@@ -20,7 +24,7 @@ donutObj.productQty = function() {
             itemQty = +(itemOptionList[i].innerHTML);
         }
     }
-    return itemQty;
+    return itemQty + this.plateQty;
 };
 
 Plate.createItemRow = function(productID) {
@@ -63,7 +67,7 @@ Plate.createRemoveButton = function(productID) {
     return removeBtn;
 };
 
-Plate.createItemQtyDiv = function(productQty) {
+Plate.createItemQtyDiv = function(productObj) {
     // create quantity div
     var qtyDiv = document.createElement('div');
     qtyDiv.className = 'col-1-8 quantity';
@@ -77,7 +81,8 @@ Plate.createItemQtyDiv = function(productQty) {
     var qtyInput = document.createElement('input');
     qtyInput.className = 'qty_input';
     // set item quantity
-    qtyInput.setAttribute('value', productQty());
+    qtyInput.setAttribute('value', productObj.getQty());
+    productObj.plateQty = productObj.getQty();
     qtyInput.setAttribute('type', 'text');
     qtyInput.setAttribute('maxlength', 5);
     // append quantity input to quantity label
@@ -96,12 +101,12 @@ Plate.createItemPriceDiv = function(productPrice) {
     return itemPrice;
 };
 
-Plate.createItemSubtotalDiv = function(productPrice, productQty) {
+Plate.createItemSubtotalDiv = function(productPrice, plateQty) {
     // create row subtotal div
     var rowSubtotal = document.createElement('div');
     rowSubtotal.className = 'col-1-8 row_subtotal';
     // calculate row subtotal
-    var rowSub = (productPrice * productQty()).toFixed(2);
+    var rowSub = (productPrice * plateQty).toFixed(2);
     // set row subtotal
     rowSubtotal.innerHTML = '$' + rowSub;
     return rowSubtotal;
@@ -111,9 +116,9 @@ Plate.buildPlateRow = function(productObj) {
     var row = Plate.createItemRow(productObj.productID);
     var itemName = Plate.createItemNameDiv(productObj.productName);
     var removeBtn = Plate.createRemoveButton(productObj.productID);
-    var qty = Plate.createItemQtyDiv(productObj.productQty);
+    var qty = Plate.createItemQtyDiv(productObj);
     var price = Plate.createItemPriceDiv(productObj.productPrice);
-    var subtotal = Plate.createItemSubtotalDiv(productObj.productPrice, productObj.productQty);
+    var subtotal = Plate.createItemSubtotalDiv(productObj.productPrice, productObj.plateQty);
     row.appendChild(itemName);
     row.appendChild(removeBtn);
     row.appendChild(qty);
@@ -126,14 +131,25 @@ Plate.addToPlate = function(row) {
     plate.appendChild(row);
 };
 
-var donutButton = document.getElementById('add_011');
-donutButton.addEventListener('click', function() {
-    var donutRow = document.getElementById('011');
-    if (plate.contains(donutRow)) {
-        console.log('donut row exists already!');
-    } else {
-        donutRow = Plate.buildPlateRow(donutObj);
-        Plate.addToPlate(donutRow);
-        Plate.addRemoveEvent(donutObj.productID);
-    }
-});
+Plate.replaceRow = function(newRow, oldRow) {
+    plate.replaceChild(newRow, oldRow);
+}
+
+var addButton = function(button, productObj) {
+    button.addEventListener('click', function() {
+        var row = document.getElementById(productObj.productID);
+        if (plate.contains(row)) {
+            console.log('that row exists already!');
+            oldRow = row;
+            // var additionalQty = productObj.getQty();
+            row = Plate.buildPlateRow(productObj);
+            Plate.replaceRow(row, oldRow);
+        } else {
+            row = Plate.buildPlateRow(productObj);
+            Plate.addToPlate(row);
+            Plate.addRemoveEvent(productObj.productID);
+        }
+    });
+};
+
+addButton(donutButton, donutObj);
