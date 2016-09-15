@@ -2,7 +2,7 @@
 var plate = document.getElementById('plate');
 
 // initialize the onPlate object (has various methods for building the cart rows)
-var onPlate = {};
+var toPlate = {};
 
 // initialize the Cart object (has methods for manipulating items on plate)
 var inCart = {};
@@ -17,7 +17,7 @@ function Product(productName, elementID, productPrice, productID) {
     this.productID = productID;
     this.onPlate = false;
     this.plateQty = 0;
-    this.addButton = document.getElementById('add_' + productID); 
+    this.addButton = document.getElementById('add_' + productID);
     this.getQty = function() {
         var itemOptionList = this.productDiv.getElementsByTagName('option');
         // var to store item quantity
@@ -38,10 +38,10 @@ function Product(productName, elementID, productPrice, productID) {
 /////////////////////////////
 
 /////////////////////
-// onPlate methods //
+// toPlate methods //
 /////////////////////
 
-onPlate.createItemRow = function(productID) {
+toPlate.createItemRow = function(productID) {
     // create item row in cart
     var cartRow = document.createElement('div');
     // add necessary class name for layout
@@ -51,7 +51,7 @@ onPlate.createItemRow = function(productID) {
     return cartRow;
 };
 
-onPlate.createItemNameDiv = function(productName) {
+toPlate.createItemNameDiv = function(productName) {
     // create item name div and add necessary class name for layout
     var itemNameDiv = document.createElement('div');
     itemNameDiv.className = 'col-1-2 item_name';
@@ -60,17 +60,20 @@ onPlate.createItemNameDiv = function(productName) {
     return itemNameDiv;
 };
 
-onPlate.addRemoveEvent = function(productID) {
+toPlate.addRemoveEvent = function(productObj) {
     // retrieve remove button element from cart row
-    var button = document.getElementById('remove_' + productID);
+    var button = document.getElementById('remove_' + productObj.productID);
     // add an event listener to remove parent row on click
     button.addEventListener('click', function() {
-        var parentNode = document.getElementById(productID);
+        var parentNode = document.getElementById(productObj.productID);
         plate.removeChild(parentNode);
+        inCart.removeCurrentItem(productObj);
+        productObj.plateQty = 0;
+        inCart.updateCartSubtotal();
     });
 };
 
-onPlate.createRemoveButton = function(productID) {
+toPlate.createRemoveButton = function(productID) {
     // create containing div for button
     var removeBtn = document.createElement('div');
     removeBtn.className = 'col-1-8';
@@ -87,7 +90,7 @@ onPlate.createRemoveButton = function(productID) {
     return removeBtn;
 };
 
-onPlate.createItemQtyDiv = function(productObj) {
+toPlate.createItemQtyDiv = function(productObj) {
     // create quantity div
     var qtyDiv = document.createElement('div');
     // add layout classes
@@ -116,7 +119,7 @@ onPlate.createItemQtyDiv = function(productObj) {
     return qtyDiv;
 };
 
-onPlate.createItemPriceDiv = function(productPrice) {
+toPlate.createItemPriceDiv = function(productPrice) {
     // create item price div
     var itemPrice = document.createElement('div');
     // add layout classes
@@ -126,7 +129,7 @@ onPlate.createItemPriceDiv = function(productPrice) {
     return itemPrice;
 };
 
-onPlate.createItemSubtotalDiv = function(productPrice, plateQty) {
+toPlate.createItemSubtotalDiv = function(productPrice, plateQty) {
     // create row subtotal div
     var rowSubtotal = document.createElement('div');
     // add layout classes
@@ -138,14 +141,14 @@ onPlate.createItemSubtotalDiv = function(productPrice, plateQty) {
     return rowSubtotal;
 };
 
-onPlate.buildPlateRow = function(productObj) {
+toPlate.buildPlateRow = function(productObj) {
     // call various methods of Plate to create cart row from product object
-    var row = onPlate.createItemRow(productObj.productID);
-    var itemName = onPlate.createItemNameDiv(productObj.productName);
-    var removeBtn = onPlate.createRemoveButton(productObj.productID);
-    var qty = onPlate.createItemQtyDiv(productObj);
-    var price = onPlate.createItemPriceDiv(productObj.productPrice);
-    var subtotal = onPlate.createItemSubtotalDiv(productObj.productPrice, productObj.plateQty);
+    var row = toPlate.createItemRow(productObj.productID);
+    var itemName = toPlate.createItemNameDiv(productObj.productName);
+    var removeBtn = toPlate.createRemoveButton(productObj.productID);
+    var qty = toPlate.createItemQtyDiv(productObj);
+    var price = toPlate.createItemPriceDiv(productObj.productPrice);
+    var subtotal = toPlate.createItemSubtotalDiv(productObj.productPrice, productObj.plateQty);
     // append the various elements to the cart row
     row.appendChild(itemName);
     row.appendChild(removeBtn);
@@ -155,12 +158,12 @@ onPlate.buildPlateRow = function(productObj) {
     return row;
 };
 
-onPlate.addToPlate = function(row) {
+toPlate.addToPlate = function(row) {
     // add the cart row to the plate div
     plate.appendChild(row);
 };
 
-onPlate.replaceRow = function(newRow, oldRow) {
+toPlate.replaceRow = function(newRow, oldRow) {
     // if a product exists in cart replace old row with new row
     plate.replaceChild(newRow, oldRow);
 };
@@ -172,10 +175,11 @@ onPlate.replaceRow = function(newRow, oldRow) {
 // currentItems array to hold objects currently on the plate (i.e. in the cart)
 inCart.currentItems = [];
 
-inCart.addCurrentItem = function(row, productObj) {
+// add item into currentItems array
+inCart.addCurrentItem = function(productObj) {
     // create currentItem object
     var currentItem = {};
-    currentItem.row = row;
+    currentItem.productName = productObj.productName;
     currentItem.productID = productObj.productID;
     currentItem.productPrice = productObj.productPrice;
     currentItem.quantity = productObj.plateQty;
@@ -183,27 +187,63 @@ inCart.addCurrentItem = function(row, productObj) {
     inCart.currentItems.push(currentItem);
 };
 
-inCart.updateCurrentItem = function(row, productObj) {
+// update item in currentItems array
+inCart.updateCurrentItem = function(productObj) {
     // create updatedItem object
     var updatedItem = {};
-    updatedItem.row = row;
+    updatedItem.productName = productObj.productName;
     updatedItem.productID = productObj.productID;
     updatedItem.productPrice = productObj.productPrice;
     updatedItem.quantity = productObj.plateQty;
     // find matching object in currentItems array and replace with updatedItem
-    inCart.currentItems.forEach(function(item){
+    inCart.currentItems.forEach(function(item) {
         if (item.productID === updatedItem.productID) {
             var index = inCart.currentItems.indexOf(item);
             inCart.currentItems.splice(index, 1, updatedItem);
         }
     });
     // test for updated qty
-    inCart.currentItems.forEach(function(item){
-        console.log(item.productID + ' has a new quantity of ' + item.quantity);
+    inCart.currentItems.forEach(function(item) {
+        console.log(item.productName + ' - ' + item.productID + ' has a new quantity of ' + item.quantity);
     });
     // end test code
 }
 
+inCart.removeCurrentItem = function(productObj) {
+    // create removedItem object
+    var removedItem = {};
+    removedItem.productID = productObj.productID;
+    // find matching object in currentItems array and remove from currentItems array
+    inCart.currentItems.forEach(function(item) {
+        if (item.productID === removedItem.productID) {
+            var index = inCart.currentItems.indexOf(item);
+            inCart.currentItems.splice(index, 1);
+        }
+    });
+};
+
+inCart.getSubtotal = function() {
+    var itemSubtotals = [];
+    var cartSubtotal;
+    inCart.currentItems.forEach(function(item) {
+        itemSubtotals.push(item.productPrice * item.quantity);
+    });
+    console.log(itemSubtotals);
+    if (itemSubtotals.length > 0) {
+        cartSubtotal = itemSubtotals.reduce(function(a, b) {
+            return a + b;
+        });
+    } else {
+        cartSubtotal = 0;
+    }
+    return cartSubtotal.toFixed(2);
+};
+
+inCart.updateCartSubtotal = function() {
+    var cartSubtotalDiv = document.getElementById('subtotalAmt');
+    var subtotal = inCart.getSubtotal();
+    cartSubtotalDiv.innerHTML = '$' + subtotal;
+};
 
 /* 
 the addButton function adds functionality to the 'add to plate' buttons:
@@ -221,15 +261,17 @@ var addButton = function(button, productObj) {
         // Else build new cart row
         if (plate.contains(row)) {
             oldRow = row;
-            row = onPlate.buildPlateRow(productObj);
-            onPlate.replaceRow(row, oldRow);
-            onPlate.addRemoveEvent(productObj.productID);
-            inCart.updateCurrentItem(row, productObj);
+            row = toPlate.buildPlateRow(productObj);
+            toPlate.replaceRow(row, oldRow);
+            toPlate.addRemoveEvent(productObj);
+            inCart.updateCurrentItem(productObj);
+            inCart.updateCartSubtotal();
         } else {
-            row = onPlate.buildPlateRow(productObj);
-            onPlate.addToPlate(row);
-            onPlate.addRemoveEvent(productObj.productID);
-            inCart.addCurrentItem(row, productObj);
+            row = toPlate.buildPlateRow(productObj);
+            toPlate.addToPlate(row);
+            toPlate.addRemoveEvent(productObj);
+            inCart.addCurrentItem(productObj);
+            inCart.updateCartSubtotal();
         }
     });
 };
