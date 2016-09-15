@@ -1,8 +1,11 @@
 // shopping cart 'plate' div where added products are listed
 var plate = document.getElementById('plate');
 
-// Plate object has various methods for building the cart rows
-var Plate = {};
+// initialize the onPlate object (has various methods for building the cart rows)
+var onPlate = {};
+
+// initialize the Cart object (has methods for manipulating items on plate)
+var inCart = {};
 
 /////////////////////////
 // product constructor //
@@ -34,7 +37,11 @@ function Product(productName, elementID, productPrice, productID) {
 // end product constructor //
 /////////////////////////////
 
-Plate.createItemRow = function(productID) {
+/////////////////////
+// onPlate methods //
+/////////////////////
+
+onPlate.createItemRow = function(productID) {
     // create item row in cart
     var cartRow = document.createElement('div');
     // add necessary class name for layout
@@ -44,7 +51,7 @@ Plate.createItemRow = function(productID) {
     return cartRow;
 };
 
-Plate.createItemNameDiv = function(productName) {
+onPlate.createItemNameDiv = function(productName) {
     // create item name div and add necessary class name for layout
     var itemNameDiv = document.createElement('div');
     itemNameDiv.className = 'col-1-2 item_name';
@@ -53,7 +60,7 @@ Plate.createItemNameDiv = function(productName) {
     return itemNameDiv;
 };
 
-Plate.addRemoveEvent = function(productID) {
+onPlate.addRemoveEvent = function(productID) {
     // retrieve remove button element from cart row
     var button = document.getElementById('remove_' + productID);
     // add an event listener to remove parent row on click
@@ -63,7 +70,7 @@ Plate.addRemoveEvent = function(productID) {
     });
 };
 
-Plate.createRemoveButton = function(productID) {
+onPlate.createRemoveButton = function(productID) {
     // create containing div for button
     var removeBtn = document.createElement('div');
     removeBtn.className = 'col-1-8';
@@ -80,7 +87,7 @@ Plate.createRemoveButton = function(productID) {
     return removeBtn;
 };
 
-Plate.createItemQtyDiv = function(productObj) {
+onPlate.createItemQtyDiv = function(productObj) {
     // create quantity div
     var qtyDiv = document.createElement('div');
     // add layout classes
@@ -109,7 +116,7 @@ Plate.createItemQtyDiv = function(productObj) {
     return qtyDiv;
 };
 
-Plate.createItemPriceDiv = function(productPrice) {
+onPlate.createItemPriceDiv = function(productPrice) {
     // create item price div
     var itemPrice = document.createElement('div');
     // add layout classes
@@ -119,7 +126,7 @@ Plate.createItemPriceDiv = function(productPrice) {
     return itemPrice;
 };
 
-Plate.createItemSubtotalDiv = function(productPrice, plateQty) {
+onPlate.createItemSubtotalDiv = function(productPrice, plateQty) {
     // create row subtotal div
     var rowSubtotal = document.createElement('div');
     // add layout classes
@@ -131,14 +138,14 @@ Plate.createItemSubtotalDiv = function(productPrice, plateQty) {
     return rowSubtotal;
 };
 
-Plate.buildPlateRow = function(productObj) {
+onPlate.buildPlateRow = function(productObj) {
     // call various methods of Plate to create cart row from product object
-    var row = Plate.createItemRow(productObj.productID);
-    var itemName = Plate.createItemNameDiv(productObj.productName);
-    var removeBtn = Plate.createRemoveButton(productObj.productID);
-    var qty = Plate.createItemQtyDiv(productObj);
-    var price = Plate.createItemPriceDiv(productObj.productPrice);
-    var subtotal = Plate.createItemSubtotalDiv(productObj.productPrice, productObj.plateQty);
+    var row = onPlate.createItemRow(productObj.productID);
+    var itemName = onPlate.createItemNameDiv(productObj.productName);
+    var removeBtn = onPlate.createRemoveButton(productObj.productID);
+    var qty = onPlate.createItemQtyDiv(productObj);
+    var price = onPlate.createItemPriceDiv(productObj.productPrice);
+    var subtotal = onPlate.createItemSubtotalDiv(productObj.productPrice, productObj.plateQty);
     // append the various elements to the cart row
     row.appendChild(itemName);
     row.appendChild(removeBtn);
@@ -148,15 +155,55 @@ Plate.buildPlateRow = function(productObj) {
     return row;
 };
 
-Plate.addToPlate = function(row) {
+onPlate.addToPlate = function(row) {
     // add the cart row to the plate div
     plate.appendChild(row);
 };
 
-Plate.replaceRow = function(newRow, oldRow) {
+onPlate.replaceRow = function(newRow, oldRow) {
     // if a product exists in cart replace old row with new row
     plate.replaceChild(newRow, oldRow);
 };
+
+////////////////////
+// inCart methods //
+////////////////////
+
+// currentItems array to hold objects currently on the plate (i.e. in the cart)
+inCart.currentItems = [];
+
+inCart.addCurrentItem = function(row, productObj) {
+    // create currentItem object
+    var currentItem = {};
+    currentItem.row = row;
+    currentItem.productID = productObj.productID;
+    currentItem.productPrice = productObj.productPrice;
+    currentItem.quantity = productObj.plateQty;
+    // push currentItem object to currentItems array
+    inCart.currentItems.push(currentItem);
+};
+
+inCart.updateCurrentItem = function(row, productObj) {
+    // create updatedItem object
+    var updatedItem = {};
+    updatedItem.row = row;
+    updatedItem.productID = productObj.productID;
+    updatedItem.productPrice = productObj.productPrice;
+    updatedItem.quantity = productObj.plateQty;
+    // find matching object in currentItems array and replace with updatedItem
+    inCart.currentItems.forEach(function(item){
+        if (item.productID === updatedItem.productID) {
+            var index = inCart.currentItems.indexOf(item);
+            inCart.currentItems.splice(index, 1, updatedItem);
+        }
+    });
+    // test for updated qty
+    inCart.currentItems.forEach(function(item){
+        console.log(item.productID + ' has a new quantity of ' + item.quantity);
+    });
+    // end test code
+}
+
 
 /* 
 the addButton function adds functionality to the 'add to plate' buttons:
@@ -174,13 +221,15 @@ var addButton = function(button, productObj) {
         // Else build new cart row
         if (plate.contains(row)) {
             oldRow = row;
-            row = Plate.buildPlateRow(productObj);
-            Plate.replaceRow(row, oldRow);
-            Plate.addRemoveEvent(productObj.productID);
+            row = onPlate.buildPlateRow(productObj);
+            onPlate.replaceRow(row, oldRow);
+            onPlate.addRemoveEvent(productObj.productID);
+            inCart.updateCurrentItem(row, productObj);
         } else {
-            row = Plate.buildPlateRow(productObj);
-            Plate.addToPlate(row);
-            Plate.addRemoveEvent(productObj.productID);
+            row = onPlate.buildPlateRow(productObj);
+            onPlate.addToPlate(row);
+            onPlate.addRemoveEvent(productObj.productID);
+            inCart.addCurrentItem(row, productObj);
         }
     });
 };
