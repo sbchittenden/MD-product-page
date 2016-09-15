@@ -7,6 +7,9 @@ var toPlate = {};
 // initialize the Cart object (has methods for manipulating items on plate)
 var inCart = {};
 
+// initialize cartDiscount object to hold discount methods
+var cartDiscount = {};
+
 /////////////////////////
 // product constructor //
 /////////////////////////
@@ -70,6 +73,7 @@ toPlate.addRemoveEvent = function(productObj) {
         inCart.removeCurrentItem(productObj);
         productObj.plateQty = 0;
         inCart.updateCartSubtotal();
+        inCart.updateCartTotal();
     });
 };
 
@@ -228,7 +232,7 @@ inCart.getSubtotal = function() {
     inCart.currentItems.forEach(function(item) {
         itemSubtotals.push(item.productPrice * item.quantity);
     });
-    console.log(itemSubtotals);
+
     if (itemSubtotals.length > 0) {
         cartSubtotal = itemSubtotals.reduce(function(a, b) {
             return a + b;
@@ -244,6 +248,30 @@ inCart.updateCartSubtotal = function() {
     var subtotal = inCart.getSubtotal();
     cartSubtotalDiv.innerHTML = '$' + subtotal;
 };
+
+inCart.getDiscountAmount = function() {
+    var discount = cartDiscount.discountAmt;
+    return discount;
+};
+
+inCart.getTotal = function() {
+    var subtotal = inCart.getSubtotal();
+    var discount = inCart.getDiscountAmount();
+    return (subtotal - discount).toFixed(2);
+};
+
+inCart.updateCartTotal = function() {
+    var cartTotalDiv = document.getElementById('totalAmt');
+    var total = inCart.getTotal();
+    cartTotalDiv.innerHTML = '$' + total;
+};
+
+/////////////////////////////
+// discount object methods //
+/////////////////////////////
+
+cartDiscount.discountAmt = 0;
+
 
 /* 
 the addButton function adds functionality to the 'add to plate' buttons:
@@ -266,12 +294,14 @@ var addButton = function(button, productObj) {
             toPlate.addRemoveEvent(productObj);
             inCart.updateCurrentItem(productObj);
             inCart.updateCartSubtotal();
+            inCart.updateCartTotal();
         } else {
             row = toPlate.buildPlateRow(productObj);
             toPlate.addToPlate(row);
             toPlate.addRemoveEvent(productObj);
             inCart.addCurrentItem(productObj);
             inCart.updateCartSubtotal();
+            inCart.updateCartTotal();
         }
     });
 };
