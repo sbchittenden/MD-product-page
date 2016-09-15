@@ -1,31 +1,35 @@
-var donutButton = document.getElementById('add_011');
-
 var plate = document.getElementById('plate');
-
-var donutObj = {};
 var Plate = {};
-var itemButton = {};
 
-donutObj.productName = 'Donut';
-donutObj.productDiv = document.getElementById('Donut');
-donutObj.productPrice = 1.50;
-donutObj.onPlate = false;
-donutObj.productID = '011';
-donutObj.plateQty = 0;
-donutObj.getQty = function() {
-    var itemOptionList = donutObj.productDiv.getElementsByTagName('option');
-    // var to store item quantity
-    var itemQty;
-    // loop through item option list to find selected option
-    for (var i = 0; i < itemOptionList.length; i++) {
-        // if option selected is true
-        if (itemOptionList[i].selected) {
-            // get item qty and convert to number
-            itemQty = +(itemOptionList[i].innerHTML);
+/////////////////////////
+// product constructor //
+/////////////////////////
+function Product(productName, elementID, productPrice, productID) {
+    this.productName = productName;
+    this.productDiv = document.getElementById(elementID);
+    this.productPrice = productPrice;
+    this.productID = productID;
+    this.onPlate = false;
+    this.plateQty = 0;
+    this.addButton = document.getElementById('add_' + productID); 
+    this.getQty = function() {
+        var itemOptionList = this.productDiv.getElementsByTagName('option');
+        // var to store item quantity
+        var itemQty;
+        // loop through item option list to find selected option
+        for (var i = 0; i < itemOptionList.length; i++) {
+            // if option selected is true
+            if (itemOptionList[i].selected) {
+                // get item qty and convert to number
+                itemQty = +(itemOptionList[i].innerHTML);
+            }
         }
-    }
-    return itemQty + this.plateQty;
-};
+        return itemQty + this.plateQty;
+    };
+}
+/////////////////////////////
+// end product constructor //
+/////////////////////////////
 
 Plate.createItemRow = function(productID) {
     // create plate row
@@ -133,17 +137,16 @@ Plate.addToPlate = function(row) {
 
 Plate.replaceRow = function(newRow, oldRow) {
     plate.replaceChild(newRow, oldRow);
-}
+};
 
 var addButton = function(button, productObj) {
     button.addEventListener('click', function() {
         var row = document.getElementById(productObj.productID);
         if (plate.contains(row)) {
-            console.log('that row exists already!');
             oldRow = row;
-            // var additionalQty = productObj.getQty();
             row = Plate.buildPlateRow(productObj);
             Plate.replaceRow(row, oldRow);
+            Plate.addRemoveEvent(productObj.productID);
         } else {
             row = Plate.buildPlateRow(productObj);
             Plate.addToPlate(row);
@@ -152,4 +155,48 @@ var addButton = function(button, productObj) {
     });
 };
 
-addButton(donutButton, donutObj);
+////////////////////////////////////////////////////////////////////////
+// create product objects                                             //
+////////////////////////////////////////////////////////////////////////
+
+// Fried Egg
+var egg = new Product('Fried Egg', 'Egg', 2.00, '001');
+// Bacon
+var bacon = new Product('Bacon', 'Bacon', 1.00, '002');
+// Breakfast Sausage
+var sausage = new Product('Breakfast Sausage', 'Sausage', 1.25, '003');
+// Waffle
+var waffle = new Product('Waffle', 'Waffle', 2.50, '004');
+// Pancake
+var pancake = new Product('Pancake', 'Pancake', 1.75, '005');
+// Hashbrowns
+var hashbrowns = new Product('Hashbrowns', 'Hashbrowns', 2.00, '006');
+// French Toast
+var frenchToast = new Product('French Toast', 'French', 3.75, '007');
+// Orange Juice
+var oj = new Product('Orange Juice', 'OJ', 1.50, '008');
+// Coffee
+var coffee = new Product('Coffee', 'Coffee', 1.00, '009');
+// Cereal
+var cereal = new Product('Bowl of Cereal', 'Cereal', 3.25, '010');
+// Donut
+var donut = new Product('Donut', 'Donut', 1.50, '011');
+// Grapefruit
+var grapefruit = new Product('Grapefruit', 'Grapefruit', 2.75, '012');
+
+////////////////////////////////////
+// initialize add to cart buttons //
+////////////////////////////////////
+
+addButton(egg.addButton, egg);
+addButton(bacon.addButton, bacon);
+addButton(sausage.addButton, sausage);
+addButton(waffle.addButton, waffle);
+addButton(pancake.addButton, pancake);
+addButton(hashbrowns.addButton, hashbrowns);
+addButton(frenchToast.addButton, frenchToast);
+addButton(oj.addButton, oj);
+addButton(coffee.addButton, coffee);
+addButton(cereal.addButton, cereal);
+addButton(donut.addButton, donut);
+addButton(grapefruit.addButton, grapefruit);
