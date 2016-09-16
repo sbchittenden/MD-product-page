@@ -71,8 +71,22 @@ toPlate.addRemoveEvent = function(productObj) {
         var parentNode = document.getElementById(productObj.productID);
         plate.removeChild(parentNode);
         inCart.removeCurrentItem(productObj);
+        // reset plate quantity of object
         productObj.plateQty = 0;
+        // reset discount amount and type, remove discount code from code input
+        inCart.discountTotal = 0;
+        cartDiscount.cartDiscountAmount = 0;
+        cartDiscount.cartDiscountType = false;
+        // cart has discount code applied is false
+        cartDiscount.hasDiscountApplied = false;
+        document.getElementById('discount_code').value = '';
         inCart.updateCartSubtotal();
+        // reset current prices array
+        inCart.currentItemPrices = [];
+        // gather remaining current prices
+        inCart.getCurrentItemPrices();
+        // update discount field
+        inCart.updateDiscountDiv();
         inCart.updateCartTotal();
     });
 };
@@ -183,7 +197,7 @@ inCart.discountTotal = 0;
 
 // get array of current item product prices for discount codes
 inCart.getCurrentItemPrices = function() {
-    inCart.currentItems.forEach(function(item){
+    inCart.currentItems.forEach(function(item) {
         inCart.currentItemPrices.push(item.productPrice);
     });
 };
@@ -271,7 +285,9 @@ inCart.getDiscountAmount = function(discount, discountType) {
         // get the highest price item from the currentItems array and multiply by discount
         var hiPricedItem;
         var sorted = inCart.currentItemPrices;
-        sorted.sort(function(a,b){return a - b;});
+        sorted.sort(function(a, b) {
+            return a - b;
+        });
         hiPricedItem = sorted[sorted.length - 1];
         inCart.discountTotal = (hiPricedItem * discount).toFixed(2);
     } else if (discountType === '011') {
@@ -326,6 +342,7 @@ inCart.updateCartTotal = function() {
 // initial cart discount is 0 (before any discount codes have been added);
 cartDiscount.cartDiscountAmount = 0;
 cartDiscount.cartDiscountType = false;
+cartDiscount.hasDiscountApplied = false;
 // valid discount code array
 cartDiscount.discountCodes = [
     take10Off = {
@@ -345,10 +362,6 @@ cartDiscount.discountCodes = [
     }
 ];
 
-// cartDiscount.getDiscount = function() {
-//     return cartDiscount.discountAmt;
-// };
-
 cartDiscount.applyDiscountCode = function() {
     // add event listener for discount button
     var discountBtn = document.getElementById('discount_button');
@@ -362,7 +375,7 @@ cartDiscount.applyDiscountCode = function() {
             validCodes.push(item.code);
         });
         // if entered code matches a valid code return the index of the valid code
-        if (validCodes.indexOf(enteredCode) !== -1) {
+        if (validCodes.indexOf(enteredCode) !== -1 && cartDiscount.hasDiscountApplied === false) {
             var code = cartDiscount.discountCodes[validCodes.indexOf(enteredCode)];
             console.log(code);
             // change cart discount type to ofID property of matching code
@@ -371,13 +384,18 @@ cartDiscount.applyDiscountCode = function() {
             // change cart discount percentage to matching code discount amount
             cartDiscount.cartDiscountAmt = code.discountAmt;
             console.log(cartDiscount.cartDiscountAmt + ' is the discount amount');
-
+            // cart has discount code applied
+            cartDiscount.hasDiscountApplied = true;
+            // get discount amount
             inCart.getDiscountAmount(cartDiscount.cartDiscountAmt, cartDiscount.cartDiscountType);
             // update discount amount div
             inCart.updateDiscountDiv();
             // update cart total
             inCart.updateCartTotal();
 
+            // reset discount type and amount
+            cartDiscount.cartDiscountAmt = 0;
+            cartDiscount.cartDiscountType = false;
         } else {
             // add an alert here that the discount code is invalid
 
