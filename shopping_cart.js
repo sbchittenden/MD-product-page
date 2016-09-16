@@ -208,17 +208,24 @@ inCart.addQtyInputUpdate = function(productObj) {
         console.log(newValue);
         console.log('the new qty value from input is ' + newValue);
         productObj.plateQty = newValue;
-        
-        var oldRow = row;
-        row = toPlate.buildPlateRow(productObj);
-        toPlate.replaceRow(row, oldRow);
-        toPlate.addRemoveEvent(productObj);
-        inCart.addQtyInputUpdate(productObj);
-        inCart.updateCurrentItem(productObj);
-        inCart.getCurrentItemPrices();
-        inCart.updateCartSubtotal();
-        inCart.updateDiscountDiv();
-        inCart.updateCartTotal();
+
+        if (newValue === 0) {
+            var parentNode = document.getElementById(productObj.productID);
+            plate.removeChild(parentNode);
+            inCart.removeCurrentItem(productObj);
+            productObj.plateQty = 0;
+        } else {
+            var oldRow = row;
+            row = toPlate.buildPlateRow(productObj);
+            toPlate.replaceRow(row, oldRow);
+            toPlate.addRemoveEvent(productObj);
+            inCart.addQtyInputUpdate(productObj);
+            inCart.updateCurrentItem(productObj);
+            inCart.getCurrentItemPrices();
+            inCart.updateCartSubtotal();
+            inCart.updateDiscountDiv();
+            inCart.updateCartTotal();
+        }
     });
 };
 
