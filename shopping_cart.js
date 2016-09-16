@@ -73,7 +73,6 @@ toPlate.addRemoveEvent = function(productObj) {
         inCart.removeCurrentItem(productObj);
         productObj.plateQty = 0;
         inCart.updateCartSubtotal();
-        cartDiscount.applyDiscountCode();
         inCart.updateCartTotal();
     });
 };
@@ -179,6 +178,15 @@ toPlate.replaceRow = function(newRow, oldRow) {
 
 // currentItems array to hold objects currently on the plate (i.e. in the cart)
 inCart.currentItems = [];
+inCart.currentItemPrices = [];
+inCart.discountTotal = 0;
+
+// get array of current item product prices for discount codes
+inCart.getCurrentItemPrices = function() {
+    inCart.currentItems.forEach(function(item){
+        inCart.currentItemPrices.push(item.productPrice);
+    });
+};
 
 // add item into currentItems array
 inCart.addCurrentItem = function(productObj) {
@@ -212,7 +220,7 @@ inCart.updateCurrentItem = function(productObj) {
         console.log(item.productName + ' - ' + item.productID + ' has a new quantity of ' + item.quantity);
     });
     // end test code
-}
+};
 
 inCart.removeCurrentItem = function(productObj) {
     // create removedItem object
@@ -253,16 +261,53 @@ inCart.updateCartSubtotal = function() {
     cartSubtotalDiv.innerHTML = '$' + subtotal;
 };
 
-inCart.getDiscountAmount = function() {
-    // get the discount amount from the cartDiscount object
-    return cartDiscount.discountAmt;
+inCart.getDiscountAmount = function(discount, discountType) {
+    if (discountType === 'total') {
+        // get the discount amount from the cartDiscount object and multiply by cartSubtotal
+        var cartDiscountAmt = discount * inCart.getSubtotal();
+        console.log('cart discount amount is ' + cartDiscountAmt);
+        inCart.discountTotal = cartDiscountAmt.toFixed(2);
+    } else if (discountType === 'singleItem') {
+        // get the highest price item from the currentItems array and multiply by discount
+        var hiPricedItem;
+        var sorted = inCart.currentItemPrices;
+        sorted.sort(function(a,b){return a - b;});
+        hiPricedItem = sorted[sorted.length - 1];
+        inCart.discountTotal = (hiPricedItem * discount).toFixed(2);
+    } else if (discountType === '011') {
+        // check to see if any object in the currentItems array has productID of 011
+        var hasDiscountID = false;
+        var quantity;
+        inCart.currentItems.forEach(function(item) {
+            if (item.productID === '011') {
+                hasDiscountID = true;
+                quantity = item.quantity;
+            }
+        });
+        if (hasDiscountID) {
+            var itemSubtotal = 1.5 * quantity;
+            inCart.discountTotal = (itemSubtotal * discount).toFixed(2);
+        } else {
+            inCart.discountTotal = 0;
+        }
+    }
+
+};
+
+inCart.updateDiscountDiv = function() {
+    // get discount div
+    var cartDiscountDiv = document.getElementById('discountAmt');
+    // update discount HTML with discount amount
+    cartDiscountDiv.innerHTML = '-$' + inCart.discountTotal;
+
 };
 
 inCart.getTotal = function() {
     // get subtotal and discount amounts
     var subtotal = inCart.getSubtotal();
-    var discount = inCart.getDiscountAmount();
+    var discount = inCart.discountTotal;
     // return the subtotal minus discount amount
+    console.log(subtotal - discount + 'is the cart total');
     return (subtotal - discount).toFixed(2);
 };
 
@@ -279,30 +324,30 @@ inCart.updateCartTotal = function() {
 /////////////////////////////
 
 // initial cart discount is 0 (before any discount codes have been added);
-cartDiscount.discountAmt = 0;
-
+cartDiscount.cartDiscountAmount = 0;
+cartDiscount.cartDiscountType = false;
 // valid discount code array
 cartDiscount.discountCodes = [
     take10Off = {
         code: 'TAKE10OFF',
-        discountAmt: 0.9,
+        discountAmt: 0.1,
         ofID: 'singleItem'
     },
     take15OffDonuts = {
         code: '15OFFDONUTS',
-        discountAmt: 0.85,
+        discountAmt: 0.15,
         ofID: '011'
     },
     take5OffAll = {
         code: '5OFFBREAKFAST',
-        discountAmt: 0.95,
+        discountAmt: 0.05,
         ofID: 'total'
     }
 ];
 
-cartDiscount.getDiscount = function() {
-    return cartDiscount.discountAmt
-};
+// cartDiscount.getDiscount = function() {
+//     return cartDiscount.discountAmt;
+// };
 
 cartDiscount.applyDiscountCode = function() {
     // add event listener for discount button
@@ -319,11 +364,23 @@ cartDiscount.applyDiscountCode = function() {
         // if entered code matches a valid code return the index of the valid code
         if (validCodes.indexOf(enteredCode) !== -1) {
             var code = cartDiscount.discountCodes[validCodes.indexOf(enteredCode)];
-            cartDiscount.discountAmt = code.discountAmt;
-            console.log(cartDiscount.discountAmt + 'is the discount amount');
+            console.log(code);
+            // change cart discount type to ofID property of matching code
+            cartDiscount.cartDiscountType = code.ofID;
+            console.log(cartDiscount.cartDiscountType + ' is the discount type');
+            // change cart discount percentage to matching code discount amount
+            cartDiscount.cartDiscountAmt = code.discountAmt;
+            console.log(cartDiscount.cartDiscountAmt + ' is the discount amount');
+
+            inCart.getDiscountAmount(cartDiscount.cartDiscountAmt, cartDiscount.cartDiscountType);
+            // update discount amount div
+            inCart.updateDiscountDiv();
+            // update cart total
+            inCart.updateCartTotal();
+
         } else {
             // add an alert here that the discount code is invalid
-            console.log('invalid discount code!');
+
         }
     });
 };
@@ -348,16 +405,18 @@ var addButton = function(button, productObj) {
             toPlate.replaceRow(row, oldRow);
             toPlate.addRemoveEvent(productObj);
             inCart.updateCurrentItem(productObj);
+            inCart.getCurrentItemPrices();
             inCart.updateCartSubtotal();
-            cartDiscount.applyDiscountCode();
+            inCart.updateDiscountDiv();
             inCart.updateCartTotal();
         } else {
             row = toPlate.buildPlateRow(productObj);
             toPlate.addToPlate(row);
             toPlate.addRemoveEvent(productObj);
             inCart.addCurrentItem(productObj);
+            inCart.getCurrentItemPrices();
             inCart.updateCartSubtotal();
-            cartDiscount.applyDiscountCode();
+            inCart.updateDiscountDiv();
             inCart.updateCartTotal();
         }
     });
@@ -408,3 +467,6 @@ addButton(coffee.addButton, coffee);
 addButton(cereal.addButton, cereal);
 addButton(donut.addButton, donut);
 addButton(grapefruit.addButton, grapefruit);
+
+// add discount code event
+cartDiscount.applyDiscountCode();
