@@ -392,7 +392,6 @@ cartDiscount.applyDiscountCode = function() {
             inCart.updateDiscountDiv();
             // update cart total
             inCart.updateCartTotal();
-
             // reset discount type and amount
             cartDiscount.cartDiscountAmt = 0;
             cartDiscount.cartDiscountType = false;

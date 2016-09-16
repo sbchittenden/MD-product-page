@@ -194,6 +194,10 @@ Shopping Cart styles
 	visibility: hidden;
 }
 
+#discount_alert {
+	clear: both;
+}
+
 .subtotal {
 	margin-bottom: 1em;
 }
