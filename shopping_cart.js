@@ -208,6 +208,9 @@ inCart.addQtyInputUpdate = function(productObj) {
         console.log(newValue);
         console.log('the new qty value from input is ' + newValue);
         productObj.plateQty = newValue;
+        // reset product select value to 0
+        var zeroOption = document.getElementById('Donut').getElementsByTagName('option')[0];
+        zeroOption.selected = true;
 
         if (newValue === 0) {
             var parentNode = document.getElementById(productObj.productID);
