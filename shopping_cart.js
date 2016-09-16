@@ -1,6 +1,9 @@
 // shopping cart 'plate' div where added products are listed
 var plate = document.getElementById('plate');
 
+// cart toggle div
+var cartToggle = document.getElementById('cart_toggle');
+
 // initialize the onPlate object (has various methods for building the cart rows)
 var toPlate = {};
 
@@ -526,3 +529,26 @@ addButton(grapefruit.addButton, grapefruit);
 
 // add discount code event
 cartDiscount.applyDiscountCode();
+
+// add cart toggle functionality
+cartToggle.addEventListener('click', function(){
+    var shoppingCart = document.getElementById('shopping_cart');
+    if (shoppingCart.className === 'hide') {
+        shoppingCart.className = 'show';
+    } else if (shoppingCart.className === 'show') {
+        shoppingCart.className = 'hide';
+    }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
