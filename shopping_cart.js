@@ -123,6 +123,8 @@ toPlate.createItemQtyDiv = function(productObj) {
     var qtyInput = document.createElement('input');
     // add layout classes
     qtyInput.className = 'qty_input';
+    // add qtyInput ID
+    qtyInput.id = 'input_' + productObj.productID;
     // set item quantity value attribute
     qtyInput.setAttribute('value', productObj.getQty());
     // update product object's plateQty to reflect current qty total
@@ -194,6 +196,31 @@ toPlate.replaceRow = function(newRow, oldRow) {
 inCart.currentItems = [];
 inCart.currentItemPrices = [];
 inCart.discountTotal = 0;
+
+// add qty input event listening
+inCart.addQtyInputUpdate = function(productObj) {
+    // get qty input
+    var input = document.getElementById('input_' + productObj.productID);
+    // add event listener
+    input.addEventListener('change', function() {
+        var row = document.getElementById(productObj.productID);
+        var newValue = +(input.value);
+        console.log(newValue);
+        console.log('the new qty value from input is ' + newValue);
+        productObj.plateQty = newValue;
+        
+        var oldRow = row;
+        row = toPlate.buildPlateRow(productObj);
+        toPlate.replaceRow(row, oldRow);
+        toPlate.addRemoveEvent(productObj);
+        inCart.addQtyInputUpdate(productObj);
+        inCart.updateCurrentItem(productObj);
+        inCart.getCurrentItemPrices();
+        inCart.updateCartSubtotal();
+        inCart.updateDiscountDiv();
+        inCart.updateCartTotal();
+    });
+};
 
 // get array of current item product prices for discount codes
 inCart.getCurrentItemPrices = function() {
@@ -417,10 +444,11 @@ var addButton = function(button, productObj) {
         // rebuild row and replace old row (with additional qty added).
         // Else build new cart row
         if (plate.contains(row)) {
-            oldRow = row;
+            var oldRow = row;
             row = toPlate.buildPlateRow(productObj);
             toPlate.replaceRow(row, oldRow);
             toPlate.addRemoveEvent(productObj);
+            inCart.addQtyInputUpdate(productObj);
             inCart.updateCurrentItem(productObj);
             inCart.getCurrentItemPrices();
             inCart.updateCartSubtotal();
@@ -430,6 +458,7 @@ var addButton = function(button, productObj) {
             row = toPlate.buildPlateRow(productObj);
             toPlate.addToPlate(row);
             toPlate.addRemoveEvent(productObj);
+            inCart.addQtyInputUpdate(productObj);
             inCart.addCurrentItem(productObj);
             inCart.getCurrentItemPrices();
             inCart.updateCartSubtotal();
