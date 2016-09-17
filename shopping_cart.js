@@ -88,6 +88,8 @@ toPlate.addRemoveEvent = function(productObj) {
         inCart.currentItemPrices = [];
         // gather remaining current prices
         inCart.getCurrentItemPrices();
+        // update number of items in cart display
+        inCart.numOfItemsInCart();
         // update discount field
         inCart.updateDiscountDiv();
         inCart.updateCartTotal();
@@ -220,6 +222,8 @@ inCart.addQtyInputUpdate = function(productObj) {
             plate.removeChild(parentNode);
             inCart.removeCurrentItem(productObj);
             productObj.plateQty = 0;
+            // update number of items in cart display
+            inCart.numOfItemsInCart();
         } else {
             var oldRow = row;
             row = toPlate.buildPlateRow(productObj);
@@ -227,6 +231,8 @@ inCart.addQtyInputUpdate = function(productObj) {
             toPlate.addRemoveEvent(productObj);
             inCart.addQtyInputUpdate(productObj);
             inCart.updateCurrentItem(productObj);
+            // update number of items in cart display
+            inCart.numOfItemsInCart();
             inCart.getCurrentItemPrices();
             inCart.updateCartSubtotal();
             inCart.updateDiscountDiv();
@@ -253,6 +259,32 @@ inCart.addCurrentItem = function(productObj) {
     // push currentItem object to currentItems array
     inCart.currentItems.push(currentItem);
 };
+
+// control the item_in_cart_num display
+inCart.numOfItemsInCart = function() {
+    var numberOfItems = 0;
+    var itemInCartNumDiv = document.getElementById('item_in_cart_num');
+    inCart.currentItems.forEach(function(item) {
+        numberOfItems += item.quantity;
+    });
+    inCart.numOfItemsVisible();
+    itemInCartNumDiv.innerHTML = numberOfItems;
+};
+
+// hide or show cart number display
+inCart.numOfItemsVisible = function() {
+    var numberOfItems = 0;
+    var itemInCartNumDiv = document.getElementById('item_in_cart_num');
+    inCart.currentItems.forEach(function(item) {
+        numberOfItems += item.quantity;
+    });
+    if (numberOfItems > 0) {
+        itemInCartNumDiv.className = 'shown';
+    } else {
+        itemInCartNumDiv.className = 'hidden';
+    }
+};
+
 
 // update item in currentItems array
 inCart.updateCurrentItem = function(productObj) {
@@ -464,6 +496,8 @@ var addButton = function(button, productObj) {
             inCart.addQtyInputUpdate(productObj);
             inCart.updateCurrentItem(productObj);
             inCart.getCurrentItemPrices();
+            // update number of items in cart display
+            inCart.numOfItemsInCart();
             inCart.updateCartSubtotal();
             inCart.updateDiscountDiv();
             inCart.updateCartTotal();
@@ -473,6 +507,8 @@ var addButton = function(button, productObj) {
             toPlate.addRemoveEvent(productObj);
             inCart.addQtyInputUpdate(productObj);
             inCart.addCurrentItem(productObj);
+            // update number of items in cart display
+            inCart.numOfItemsInCart();
             inCart.getCurrentItemPrices();
             inCart.updateCartSubtotal();
             inCart.updateDiscountDiv();
@@ -531,7 +567,7 @@ addButton(grapefruit.addButton, grapefruit);
 cartDiscount.applyDiscountCode();
 
 // add cart toggle functionality
-cartToggle.addEventListener('click', function(){
+cartToggle.addEventListener('click', function() {
     var shoppingCart = document.getElementById('shopping_cart');
     if (shoppingCart.className === 'hide') {
         shoppingCart.className = 'show';
@@ -539,16 +575,3 @@ cartToggle.addEventListener('click', function(){
         shoppingCart.className = 'hide';
     }
 });
-
-
-
-
-
-
-
-
-
-
-
-
-

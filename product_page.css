@@ -163,7 +163,7 @@ Shopping Cart styles
 #shopping_cart.hide {
     position: fixed;
     top: 100px;
-    left: 1400px;
+    left: 1500px;
     width: 70em;
     transition-duration: 500ms;
 }
@@ -171,7 +171,7 @@ Shopping Cart styles
 #shopping_cart.show {
     position: fixed;
     top: 100px;
-    left: 120px;
+    left: 144px;
     width: 70em;
     transition-duration: 500ms;
 }
@@ -209,6 +209,18 @@ Shopping Cart styles
     font-size: 1.1em;
     top: -11px;
     left: -14px;
+}
+
+.hidden {
+	visibility: hidden;
+	opacity: 0;
+	transition: 500ms;
+}
+
+.shown {
+	visibility: visible;
+	opacity: 1;
+	transition: 500ms;
 }
 
 .cart_list_wrap {
