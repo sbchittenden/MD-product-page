@@ -220,7 +220,8 @@ inCart.addQtyInputUpdate = function(productObj) {
         productObj.plateQty = newValue;
         // reset product select value to 0 otherwise it messes up qty updating
         var parentDiv = document.getElementById(ID).parentNode;
-        var zeroOption = document.getElementsByTagName('option')[0];
+        console.log(parentDiv);
+        var zeroOption = parentDiv.getElementsByTagName('option')[0];
         console.log(zeroOption);
         zeroOption.selected = true;
         // if newValue is 0 remove item from cart otherwise rebuild row with new value
@@ -245,6 +246,10 @@ inCart.addQtyInputUpdate = function(productObj) {
             inCart.updateDiscountDiv();
             inCart.updateCartTotal();
         }
+        if (inCart.currentItems.length === 0) {
+            inCart.updateCartSubtotal();
+        }
+
     });
 };
 
@@ -492,10 +497,18 @@ var addButton = function(button, productObj) {
     // event listener for 'add to plate' buttons
     button.addEventListener('click', function() {
         var row = document.getElementById(productObj.productID);
+        var ID = 'add_' + productObj.productID;
+        var parentDiv = document.getElementById(ID).parentNode;
+        console.log(parentDiv);
+        var zeroOption = parentDiv.getElementsByTagName('option');
+        console.log(zeroOption)
+        if (zeroOption.value === 0) {
+            return false;
+        }
         // if the product has already been added to the plate (cart) then
         // rebuild row and replace old row (with additional qty added).
         // Else build new cart row
-        if (plate.contains(row)) {
+        else if (plate.contains(row)) {
             var oldRow = row;
             row = toPlate.buildPlateRow(productObj);
             toPlate.replaceRow(row, oldRow);
