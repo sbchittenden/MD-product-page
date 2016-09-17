@@ -4,6 +4,9 @@ var plate = document.getElementById('plate');
 // cart toggle div
 var cartToggle = document.getElementById('cart_toggle');
 
+// continue shopping button
+var continueShopping = document.getElementById('continue_shop');
+
 // initialize the onPlate object (has various methods for building the cart rows)
 var toPlate = {};
 
@@ -574,4 +577,10 @@ cartToggle.addEventListener('click', function() {
     } else if (shoppingCart.className === 'show') {
         shoppingCart.className = 'hide';
     }
+});
+
+// continue shopping button functionality
+continueShopping.addEventListener('click', function() {
+    var shoppingCart = document.getElementById('shopping_cart');
+    shoppingCart.className = 'hide';
 });

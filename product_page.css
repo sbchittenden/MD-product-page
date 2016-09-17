@@ -193,6 +193,11 @@ Shopping Cart styles
     cursor: pointer;
 }
 
+#cart_toggle:active {
+    color: #87D37C;
+    cursor: pointer;
+}
+
 #cart_toggle > i {
     display: block;
     padding: 3px 0 8px 0;
