@@ -232,6 +232,9 @@ inCart.addQtyInputUpdate = function(productObj) {
             productObj.plateQty = 0;
             // update number of items in cart display
             inCart.numOfItemsInCart();
+            inCart.updateCartSubtotal();
+            inCart.updateDiscountDiv();
+            inCart.updateCartTotal();
         } else {
             var oldRow = row;
             row = toPlate.buildPlateRow(productObj);
