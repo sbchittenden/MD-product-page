@@ -592,15 +592,20 @@ cartDiscount.applyDiscountCode();
 // add cart toggle functionality
 cartToggle.addEventListener('click', function() {
     var shoppingCart = document.getElementById('shopping_cart');
+    var fade = document.getElementById('blackout');
     if (shoppingCart.className === 'hide') {
         shoppingCart.className = 'show';
+        fade.className = 'show';
     } else if (shoppingCart.className === 'show') {
         shoppingCart.className = 'hide';
+        fade.className = 'hide';
     }
 });
 
 // continue shopping button functionality
 continueShopping.addEventListener('click', function() {
     var shoppingCart = document.getElementById('shopping_cart');
+    var fade = document.getElementById('blackout');
     shoppingCart.className = 'hide';
+    fade.className = 'hide';
 });

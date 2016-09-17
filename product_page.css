@@ -159,6 +159,24 @@ sally smith image styles
 /* ----------------------
 Shopping Cart styles
 ------------------------- */
+#blackout.show {
+	min-width: 100vw;
+	min-height: 4000px;
+	background-color: rgba(0,0,0,0.75);
+	position: absolute;
+	top: 0;
+	transition: 500ms;
+}
+
+#blackout.hide {
+	min-width: 100vw;
+	min-height: 4000px;
+	background-color: rgba(0,0,0,0);
+	position: absolute;
+	top: 0;
+	transition: 500ms;
+	z-index: -1000;
+}
 
 #shopping_cart.hide {
     position: fixed;
