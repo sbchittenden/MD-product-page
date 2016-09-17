@@ -212,12 +212,16 @@ inCart.addQtyInputUpdate = function(productObj) {
     // add event listener
     input.addEventListener('change', function() {
         var row = document.getElementById(productObj.productID);
+        var ID = 'add_' + row.id;
+        console.log(ID);
         var newValue = +(input.value);
         console.log(newValue);
         console.log('the new qty value from input is ' + newValue);
         productObj.plateQty = newValue;
         // reset product select value to 0 otherwise it messes up qty updating
-        var zeroOption = document.getElementById('Donut').getElementsByTagName('option')[0];
+        var parentDiv = document.getElementById(ID).parentNode;
+        var zeroOption = document.getElementsByTagName('option')[0];
+        console.log(zeroOption);
         zeroOption.selected = true;
         // if newValue is 0 remove item from cart otherwise rebuild row with new value
         if (newValue === 0) {
