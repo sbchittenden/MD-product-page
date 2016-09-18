@@ -1,3 +1,4 @@
+(function(window) {
 // shopping cart 'plate' div where added products are listed
 var plate = document.getElementById('plate');
 
@@ -624,3 +625,5 @@ continueShopping.addEventListener('click', function() {
     shoppingCart.className = 'hide';
     fade.className = 'hide';
 });
+
+})(window);
