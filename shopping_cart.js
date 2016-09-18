@@ -450,43 +450,55 @@ cartDiscount.discountCodes = [
 ];
 
 cartDiscount.applyDiscountCode = function() {
-    // add event listener for discount button
-    var discountBtn = document.getElementById('discount_button');
-    discountBtn.addEventListener('click', function() {
-        // get entered discount code from discount code input field
-        var enteredCode = document.getElementById('discount_code').value;
-        // array of valid codes (from cartDiscount.discountCodes array)
-        var validCodes = [];
-        // loop through valid discount codes and add to validCodes array
-        cartDiscount.discountCodes.forEach(function(item) {
-            validCodes.push(item.code);
-        });
-        // if entered code matches a valid code return the index of the valid code
-        if (validCodes.indexOf(enteredCode) !== -1 && cartDiscount.hasDiscountApplied === false) {
-            var code = cartDiscount.discountCodes[validCodes.indexOf(enteredCode)];
-            console.log(code);
-            // change cart discount type to ofID property of matching code
-            cartDiscount.cartDiscountType = code.ofID;
-            console.log(cartDiscount.cartDiscountType + ' is the discount type');
-            // change cart discount percentage to matching code discount amount
-            cartDiscount.cartDiscountAmt = code.discountAmt;
-            console.log(cartDiscount.cartDiscountAmt + ' is the discount amount');
-            // cart has discount code applied
-            cartDiscount.hasDiscountApplied = true;
-            // get discount amount
-            inCart.getDiscountAmount(cartDiscount.cartDiscountAmt, cartDiscount.cartDiscountType);
-            // update discount amount div
-            inCart.updateDiscountDiv();
-            // update cart total
-            inCart.updateCartTotal();
-            // reset discount type and amount
-            cartDiscount.cartDiscountAmt = 0;
-            cartDiscount.cartDiscountType = false;
-        } else {
-            // add an alert here that the discount code is invalid
-
-        }
+    // get entered discount code from discount code input field
+    var enteredCode = document.getElementById('discount_code').value;
+    console.log(enteredCode);
+    // array of valid codes (from cartDiscount.discountCodes array)
+    var validCodes = [];
+    // loop through valid discount codes and add to validCodes array
+    cartDiscount.discountCodes.forEach(function(item) {
+        validCodes.push(item.code);
     });
+    console.log(validCodes);
+    // if entered code matches a valid code return the index of the valid code
+    if (validCodes.indexOf(enteredCode) !== -1) {
+        var code = cartDiscount.discountCodes[validCodes.indexOf(enteredCode)];
+        console.log(code);
+        // change cart discount type to ofID property of matching code
+        cartDiscount.cartDiscountType = code.ofID;
+        console.log(cartDiscount.cartDiscountType + ' is the discount type');
+        // change cart discount percentage to matching code discount amount
+        cartDiscount.cartDiscountAmt = code.discountAmt;
+        console.log(cartDiscount.cartDiscountAmt + ' is the discount amount');
+        // cart has discount code applied
+        cartDiscount.hasDiscountApplied = true;
+        // store current discount amount for comparison
+        var currentDiscountAmt = inCart.discountTotal;
+        console.log(currentDiscountAmt + ' is the current discount amount');
+        // get discount amount
+        inCart.getDiscountAmount(cartDiscount.cartDiscountAmt, cartDiscount.cartDiscountType);
+        // store new discount amount
+        var newDiscountAmt = inCart.discountTotal;
+        console.log(newDiscountAmt + ' is the new discount amount');
+
+        if (newDiscountAmt > currentDiscountAmt) {
+            inCart.updateDiscountDiv();
+        } else if (newDiscountAmt <= currentDiscountAmt) {
+            inCart.discountTotal = currentDiscountAmt;
+            inCart.updateDiscountDiv();
+        }
+        // update discount amount div
+        //inCart.updateDiscountDiv();
+        // update cart total
+        inCart.updateCartTotal();
+        // reset discount type and amount
+        //cartDiscount.cartDiscountAmt = 0;
+        //cartDiscount.cartDiscountType = false;
+    } else {
+        // add an alert here that the discount code is invalid
+
+    }
+
 };
 
 /* 
@@ -586,8 +598,11 @@ addButton(cereal.addButton, cereal);
 addButton(donut.addButton, donut);
 addButton(grapefruit.addButton, grapefruit);
 
-// add discount code event
-cartDiscount.applyDiscountCode();
+// add event listener for discount button
+var discountBtn = document.getElementById('discount_button');
+discountBtn.addEventListener('click', function() {
+    cartDiscount.applyDiscountCode();
+});
 
 // add cart toggle functionality
 cartToggle.addEventListener('click', function() {
