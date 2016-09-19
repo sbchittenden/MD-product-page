@@ -1,8 +1,8 @@
-// shopping cart object
+// ========== shopping cart object =========== //
 var shoppingCart = {
     discountCodes: {
         TAKE10OFF: 0.1,
-        DONUTLOVER: 0.15,
+        DONUTLOVER15: 0.15,
         BREAKFAST5: 0.05
     },
     cartItems: [],
@@ -18,7 +18,7 @@ for (var i = 0; i < addButtons.length; i++) {
     addButtons[i].addEventListener('click', addToCart);
 }
 
-// addToCart function
+// ========= addToCart function ======= //
 function addToCart(event) {
     // get parent element of clicked button
     var parentDiv = event.target.parentNode;
@@ -26,7 +26,7 @@ function addToCart(event) {
     var item = makeItem(parentDiv);
     // shopping cart item array
     var items = shoppingCart.cartItems;
-    
+
     // add item to cart or update existing qty
     addOrUpdate(item, items);
 
@@ -34,15 +34,18 @@ function addToCart(event) {
 
 
 
+
 }
 
-// function to create an item object
+// ========= function to create an item object ========= //
 function makeItem(node) {
     // get elements from document
     var name = node.getElementsByClassName('product_name')[0].innerHTML;
     var price = node.getElementsByClassName('product_price')[0].innerHTML;
     var optionList = node.getElementsByTagName('option');
-    var qty; // item quantity
+    // initialize item object
+    var item = {};
+    var qty; // value of selected option element (item quantity)
     var i; // loop counter
 
     // convert price to a number
@@ -55,16 +58,16 @@ function makeItem(node) {
         }
     }
 
-    // initialize item object
-    var item = {};
     item.name = name;
     item.price = price;
     item.qty = qty;
+    item.subtotal = price * qty;
 
     // return the new item object
     return item;
 }
 
+// ======== function to add or update item in shopping cart ======= //
 function addOrUpdate(item, items) {
     // index of item in shopping cart item array
     var existing = -1;
@@ -81,8 +84,24 @@ function addOrUpdate(item, items) {
     if (existing === -1) {
         // add item object to shoppingCart.cartItems array
         items.push(item);
+        updateCartSubtotal(item.subtotal);
     } else {
-        // updated item objects qty
+        // update existing object's qty
         items[existing].qty += item.qty;
+        // update existing object's subtotal
+        items[existing].subtotal += item.qty * item.price;
+        updateCartSubtotal(item.subtotal);
     }
 }
+
+// =========== function to calculate shopping cart subtotal ========== //
+function updateCartSubtotal(itemSub) {
+  shoppingCart.cartSubtotal += itemSub;
+}
+
+
+
+
+
+
+
