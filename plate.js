@@ -78,6 +78,8 @@ function updatePlate(event) {
     var items = shoppingCart.cartItems;
     // get parent element of changed input
     var parentDiv = event.target.parentNode.parentNode.parentNode;
+    // get row subtotal div
+    var rowSubtotal = parentDiv.getElementsByClassName('row_subtotal')[0];
     // create an item object from row properties
     var updated = changeItem(parentDiv);
     console.log(updated);
@@ -100,6 +102,7 @@ function updatePlate(event) {
     // update existing object's subtotal
     existingItem.subtotal = existingItem.qty * existingItem.price;
     shoppingCart.cartSubtotal = existingItem.subtotal;
+    rowSubtotal.innerHTML = '$' + existingItem.subtotal.toFixed(2);
     updateCartTotal();
     writeCartTotals();
     // 
@@ -110,8 +113,10 @@ function updatePlate(event) {
 function changeItem(node) {
     var plateItemChanges = []; // get elements from node
     var name = node.getElementsByClassName('item_name')[0].innerHTML;
-    var qty = node.getElementsByClassName('qty_input')[0].value;
+    var qtyInput = node.getElementsByClassName('qty_input')[0];
+    var qty = qtyInput.value;
     qty = +(qty);
+    qtyInput.setAttribute('value', qty);
     plateItemChanges.push(name, qty);
     return plateItemChanges;
 }
@@ -182,10 +187,32 @@ function addOrUpdateItem(item, items) {
         items[existing].qty += item.qty;
         // update existing object's subtotal
         items[existing].subtotal += item.qty * item.price;
+        updatePlateQtyInput(item, items[existing].qty);
         updateCartSubtotal();
         updateCartTotal();
     }
 
+}
+
+// ======== updatePlateQtyInput() ======= //
+function updatePlateQtyInput(item, qty) {
+  console.log(item);
+  var plateItems = plate.getElementsByClassName('item_name');
+  var itemRow;
+  var qtyInput;
+  var rowSub;
+  var i;
+  for (i = 0; i < plateItems.length; i++) {
+    if (plateItems[i].innerHTML === item.name) {
+      itemRow = plateItems[i].parentNode;
+    }
+  }
+  qtyInput = itemRow.getElementsByClassName('qty_input');
+  qtyInput[0].setAttribute('value', qty);
+  qtyInput[0].value = qty;
+
+  rowSub = itemRow.getElementsByClassName('row_subtotal');
+  rowSub[0].innerHTML = '$' + ((qty * item.price).toFixed(2));
 }
 
 // =========== function to calculate shopping cart subtotal ========== //
@@ -200,7 +227,7 @@ function updateCartSubtotal() {
         subtotals.push(items[i].subtotal);
     }
     subtotal = subtotals.reduce(function(a, b) {
-        return a + b });
+        return a + b; });
     shoppingCart.cartSubtotal = subtotal;
 }
 
