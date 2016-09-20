@@ -101,11 +101,17 @@ function updatePlate(event) {
     console.log(items);
     // update existing object's subtotal
     existingItem.subtotal = existingItem.qty * existingItem.price;
-    shoppingCart.cartSubtotal = existingItem.subtotal;
+    // if new qty is 0 remove item from plate
+    if (existingItem.subtotal === 0) {
+        plate.removeChild(parentDiv);
+    }
+    // updated row subtotal HTML
     rowSubtotal.innerHTML = '$' + existingItem.subtotal.toFixed(2);
+    // update shopping cart subtotal and total
+    updateCartSubtotal();
     updateCartTotal();
+    // update plate subtotal and total
     writeCartTotals();
-    // 
 }
 
 // ======== function to update item already in plate ====== //
@@ -196,23 +202,23 @@ function addOrUpdateItem(item, items) {
 
 // ======== updatePlateQtyInput() ======= //
 function updatePlateQtyInput(item, qty) {
-  console.log(item);
-  var plateItems = plate.getElementsByClassName('item_name');
-  var itemRow;
-  var qtyInput;
-  var rowSub;
-  var i;
-  for (i = 0; i < plateItems.length; i++) {
-    if (plateItems[i].innerHTML === item.name) {
-      itemRow = plateItems[i].parentNode;
+    console.log(item);
+    var plateItems = plate.getElementsByClassName('item_name');
+    var itemRow;
+    var qtyInput;
+    var rowSub;
+    var i;
+    for (i = 0; i < plateItems.length; i++) {
+        if (plateItems[i].innerHTML === item.name) {
+            itemRow = plateItems[i].parentNode;
+        }
     }
-  }
-  qtyInput = itemRow.getElementsByClassName('qty_input');
-  qtyInput[0].setAttribute('value', qty);
-  qtyInput[0].value = qty;
+    qtyInput = itemRow.getElementsByClassName('qty_input');
+    qtyInput[0].setAttribute('value', qty);
+    qtyInput[0].value = qty;
 
-  rowSub = itemRow.getElementsByClassName('row_subtotal');
-  rowSub[0].innerHTML = '$' + ((qty * item.price).toFixed(2));
+    rowSub = itemRow.getElementsByClassName('row_subtotal');
+    rowSub[0].innerHTML = '$' + ((qty * item.price).toFixed(2));
 }
 
 // =========== function to calculate shopping cart subtotal ========== //
@@ -227,7 +233,8 @@ function updateCartSubtotal() {
         subtotals.push(items[i].subtotal);
     }
     subtotal = subtotals.reduce(function(a, b) {
-        return a + b; });
+        return a + b;
+    });
     shoppingCart.cartSubtotal = subtotal;
 }
 
@@ -293,6 +300,17 @@ function makePlateRow(item) {
     itemPrice.innerHTML = '$' + item.price.toFixed(2);
     itemSubtotal.innerHTML = '$' + item.subtotal.toFixed(2);
 
+    // add event listener for remove button
+    removeBtn.firstChild.addEventListener('click', function(event) {
+        var itemIndex = shoppingCart.cartItems.indexOf(item);
+        console.log(itemIndex);
+        plate.removeChild(itemRow);
+        shoppingCart.cartItems.splice(itemIndex, 1);
+        updateCartSubtotal();
+        updateCartTotal();
+        writeCartTotals();
+    });
+
     // append item divs to the plate row div
     itemRow.appendChild(itemName);
     itemRow.appendChild(removeBtn);
@@ -302,7 +320,6 @@ function makePlateRow(item) {
 
     return itemRow;
 }
-
 
 // ========== call activatePage function ======= //
 
