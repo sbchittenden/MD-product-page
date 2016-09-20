@@ -5,6 +5,7 @@ var shoppingCart = {
         'DONUTLOVER15': 0.15,
         'BREAKFAST5': 0.05
     },
+    activeCode: undefined,
     cartItems: [],
     cartSubtotal: 0,
     cartDiscount: 0,
@@ -70,6 +71,7 @@ function activatePage() {
         var currentDiscount = shoppingCart.cartDiscount;
         var discount = getDiscount(code);
         if (discount > currentDiscount) {
+            shoppingCart.activeCode = code;
             updateCartDiscount(discount);
             updateCartTotal();
             writeCartTotals();
@@ -99,6 +101,8 @@ function updatePlate(event) {
     var items = shoppingCart.cartItems;
     // get parent element of changed input
     var parentDiv = event.target.parentNode.parentNode.parentNode;
+    // discount code input element
+    var discountInput = document.getElementById('discount_code');
     // get row subtotal div
     var rowSubtotal = parentDiv.getElementsByClassName('row_subtotal')[0];
     // create an item object from row properties
@@ -125,6 +129,10 @@ function updatePlate(event) {
     // if new qty is 0 remove item from plate
     if (existingItem.subtotal === 0) {
         plate.removeChild(parentDiv);
+        updateCartDiscount(0); // reset cart discount on item removal
+        discountInput.value = '';
+        shoppingCart.activeCode = undefined;
+        numOfItemsInCart();
     }
     // updated row subtotal HTML
     rowSubtotal.innerHTML = '$' + existingItem.subtotal.toFixed(2);
@@ -365,7 +373,9 @@ function makePlateRow(item) {
     itemPrice.innerHTML = '$' + item.price.toFixed(2);
     itemSubtotal.innerHTML = '$' + item.subtotal.toFixed(2);
 
-    // add event listener for remove button
+    //////////////////////////////////////////
+    // add event listener for remove button //
+    //////////////////////////////////////////
     removeBtn.firstChild.addEventListener('click', function(event) {
         var discountInput = document.getElementById('discount_code');
         var itemIndex = shoppingCart.cartItems.indexOf(item);
@@ -375,6 +385,7 @@ function makePlateRow(item) {
         updateCartSubtotal();
         updateCartDiscount(0); // reset cart discount on item removal
         discountInput.value = '';
+        shoppingCart.activeCode = undefined;
         updateCartTotal();
         numOfItemsInCart();
         writeCartTotals();
@@ -416,12 +427,6 @@ function numOfItemsInCart() {
     }
     itemInCartNumDiv.innerHTML = numberOfItems;
 }
-
-
-
-
-
-
 
 // ========== call activatePage function ======= //
 activatePage();
