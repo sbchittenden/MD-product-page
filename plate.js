@@ -35,6 +35,9 @@ function activatePage() {
     // continue shopping button
     var continueShopping = document.getElementById('continue_shop');
 
+    // blackout div
+    var fade = document.getElementById('blackout');
+
     // loop counter
     var i;
 
@@ -45,7 +48,6 @@ function activatePage() {
 
     // === event listener for show/hide cart ==== //
     cartToggle.addEventListener('click', function() {
-        var fade = document.getElementById('blackout');
         var visibility = breakfastPlate.className;
         if (visibility === 'hide') {
             breakfastPlate.className = 'show';
@@ -59,11 +61,15 @@ function activatePage() {
     // ===== continue shopping button functionality ====== //
     continueShopping.addEventListener('click', function() {
         var shoppingCart = document.getElementById('shopping_cart');
-        var fade = document.getElementById('blackout');
-        shoppingCart.className = 'hide';
+        breakfastPlate.className = 'hide';
         fade.className = 'hide';
     });
 
+    // ====== event listener for click on #blackout div (off of cart) ===== //
+    fade.addEventListener('click', function(){
+        breakfastPlate.className = 'hide';
+        fade.className = 'hide';
+    });
 
     // ======= discount button event listener ====== //
     discountBtn.addEventListener('click', function() {
@@ -104,7 +110,7 @@ function updatePlate(event) {
     // discount code input element
     var discountInput = document.getElementById('discount_code');
     // get row subtotal div
-    var rowSubtotal = parentDiv.getElementsByClassName('row_subtotal')[0];
+    var rowSubtotal = parentDiv.querySelector('.row_subtotal');
     // create an item object from row properties
     var updated = changeItem(parentDiv);
     console.log(updated);
@@ -147,8 +153,8 @@ function updatePlate(event) {
 // ======== function to update item already in plate ====== //
 function changeItem(node) {
     var plateItemChanges = []; // get elements from node
-    var name = node.getElementsByClassName('item_name')[0].innerHTML;
-    var qtyInput = node.getElementsByClassName('qty_input')[0];
+    var name = node.querySelector('.item_name').innerHTML;
+    var qtyInput = node.querySelector('.qty_input');
     var qty = qtyInput.value;
     qty = +(qty);
     qtyInput.setAttribute('value', qty);
@@ -159,8 +165,8 @@ function changeItem(node) {
 // ========= function to create an item object ========= //
 function makeItem(node) {
     // get elements from node
-    var name = node.getElementsByClassName('product_name')[0].innerHTML;
-    var price = node.getElementsByClassName('product_price')[0].innerHTML;
+    var name = node.querySelector('.product_name').innerHTML;
+    var price = node.querySelector('.product_price').innerHTML;
     var optionList = node.getElementsByTagName('option');
     // initialize item object
     var item = {};
@@ -243,12 +249,12 @@ function updatePlateQtyInput(item, qty) {
             itemRow = plateItems[i].parentNode;
         }
     }
-    qtyInput = itemRow.getElementsByClassName('qty_input');
-    qtyInput[0].setAttribute('value', qty);
-    qtyInput[0].value = qty;
+    qtyInput = itemRow.querySelector('.qty_input');
+    qtyInput.setAttribute('value', qty);
+    qtyInput.value = qty;
 
-    rowSub = itemRow.getElementsByClassName('row_subtotal');
-    rowSub[0].innerHTML = '$' + ((qty * item.price).toFixed(2));
+    rowSub = itemRow.querySelector('.row_subtotal');
+    rowSub.innerHTML = '$' + ((qty * item.price).toFixed(2));
 }
 
 // =========== function to calculate shopping cart subtotal ========== //
