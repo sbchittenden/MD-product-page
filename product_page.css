@@ -161,7 +161,7 @@ Shopping Cart styles
 ------------------------- */
 #blackout.show {
 	min-width: 100vw;
-	min-height: 4000px;
+	min-height: 3250px;
 	background-color: rgba(0,0,0,0.75);
 	position: absolute;
 	top: 0;
@@ -170,7 +170,7 @@ Shopping Cart styles
 
 #blackout.hide {
 	min-width: 100vw;
-	min-height: 4000px;
+	min-height: 3250px;
 	background-color: rgba(0,0,0,0);
 	position: absolute;
 	top: 0;

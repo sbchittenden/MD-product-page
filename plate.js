@@ -1,17 +1,15 @@
 // ========== shopping cart object =========== //
 var shoppingCart = {
     discountCodes: {
-        TAKE10OFF: 0.1,
-        DONUTLOVER15: 0.15,
-        BREAKFAST5: 0.05
+        'TAKE10OFF': 0.1,
+        'DONUTLOVER15': 0.15,
+        'BREAKFAST5': 0.05
     },
     cartItems: [],
     cartSubtotal: 0,
     cartDiscount: 0,
     cartTotal: 0
 };
-
-
 
 // ========== add event listeners to page function ========= // 
 function activatePage() {
@@ -22,7 +20,7 @@ function activatePage() {
     var plate = document.getElementById('plate');
 
     // discount code input element
-    var discountInput = document.getElementById('dicsount_code');
+    var discountInput = document.getElementById('discount_code');
 
     // add discount button element
     var discountBtn = document.getElementById('discount_button');
@@ -32,6 +30,10 @@ function activatePage() {
 
     // show/hide cart button
     var cartToggle = document.getElementById('cart_toggle');
+
+    // continue shopping button
+    var continueShopping = document.getElementById('continue_shop');
+
     // loop counter
     var i;
 
@@ -42,22 +44,42 @@ function activatePage() {
 
     // === event listener for show/hide cart ==== //
     cartToggle.addEventListener('click', function() {
+        var fade = document.getElementById('blackout');
         var visibility = breakfastPlate.className;
         if (visibility === 'hide') {
             breakfastPlate.className = 'show';
+            fade.className = 'show';
         } else if (visibility === 'show') {
             breakfastPlate.className = 'hide';
+            fade.className = 'hide';
         }
     });
 
+    // ===== continue shopping button functionality ====== //
+    continueShopping.addEventListener('click', function() {
+        var shoppingCart = document.getElementById('shopping_cart');
+        var fade = document.getElementById('blackout');
+        shoppingCart.className = 'hide';
+        fade.className = 'hide';
+    });
 
 
-
+    // ======= discount button event listener ====== //
+    discountBtn.addEventListener('click', function() {
+        var code = discountInput.value;
+        var currentDiscount = shoppingCart.cartDiscount;
+        var discount = getDiscount(code);
+        if (discount > currentDiscount) {
+            updateCartDiscount(discount);
+            updateCartTotal();
+            writeCartTotals();
+        } else {
+            console.log('old discount amount is higher');
+        }
+    });
 }
 
-
 // ========= addToCart function ======= //
-
 function addToCart(event) {
     // get parent element of clicked button
     var parentDiv = event.target.parentNode;
@@ -72,7 +94,6 @@ function addToCart(event) {
 }
 
 // ======= updatePlate function ===== //
-
 function updatePlate(event) {
     // get cartItems array
     var items = shoppingCart.cartItems;
@@ -110,12 +131,12 @@ function updatePlate(event) {
     // update shopping cart subtotal and total
     updateCartSubtotal();
     updateCartTotal();
+    numOfItemsInCart();
     // update plate subtotal and total
     writeCartTotals();
 }
 
 // ======== function to update item already in plate ====== //
-
 function changeItem(node) {
     var plateItemChanges = []; // get elements from node
     var name = node.getElementsByClassName('item_name')[0].innerHTML;
@@ -128,7 +149,6 @@ function changeItem(node) {
 }
 
 // ========= function to create an item object ========= //
-
 function makeItem(node) {
     // get elements from node
     var name = node.getElementsByClassName('product_name')[0].innerHTML;
@@ -160,7 +180,6 @@ function makeItem(node) {
 }
 
 // ======== function to add or update item in shopping cart ======= //
-
 function addOrUpdateItem(item, items) {
     // index of item in shopping cart item array
     var existing = -1;
@@ -182,9 +201,11 @@ function addOrUpdateItem(item, items) {
         plate.appendChild(makePlateRow(item));
         // add plate qty event listener
         plateQtyEvent();
-        // update cart subtotal
+        // update cart subtotal and total
         updateCartSubtotal();
         updateCartTotal();
+        // update number of items in cart display
+        numOfItemsInCart();
         // update cart discount amount
 
         // update cart total
@@ -196,6 +217,7 @@ function addOrUpdateItem(item, items) {
         updatePlateQtyInput(item, items[existing].qty);
         updateCartSubtotal();
         updateCartTotal();
+        numOfItemsInCart();
     }
 
 }
@@ -222,7 +244,6 @@ function updatePlateQtyInput(item, qty) {
 }
 
 // =========== function to calculate shopping cart subtotal ========== //
-
 function updateCartSubtotal() {
     var subtotals = [];
     var subtotal;
@@ -232,26 +253,71 @@ function updateCartSubtotal() {
     for (i = 0; i < items.length; i++) {
         subtotals.push(items[i].subtotal);
     }
-    subtotal = subtotals.reduce(function(a, b) {
-        return a + b;
-    });
-    shoppingCart.cartSubtotal = subtotal;
+    if (subtotals.length > 0) {
+        subtotal = subtotals.reduce(function(a, b) {
+            return a + b;
+        });
+        shoppingCart.cartSubtotal = subtotal;
+    } else {
+        shoppingCart.cartSubtotal = 0;
+    }
 }
 
+// ========= function to determine discount amt ============== //
+function getDiscount(code) {
+    var discount, discountAmount, donutObj, donutQty, itemPrices = [],
+        hiPrice, i;
+    if (code === 'TAKE10OFF') {
+        discount = 0.1;
+        // push item prices to array
+        shoppingCart.cartItems.forEach(function(obj) {
+            itemPrices.push(obj.price);
+        });
+        // sort the item price array
+        itemPrices.sort(function(a, b) {
+            return a - b;
+        });
+        // get highest price
+        hiPrice = itemPrices[itemPrices.length - 1];
+        // calculate shopping cart discount with hi price
+        discountAmount = hiPrice * discount;
+    } else if (code === 'BREAKFAST5') {
+        discount = 0.05;
+        discountAmount = shoppingCart.cartSubtotal * discount;
+    } else if (code === 'DONUTLOVER15') {
+        discount = 0.15;
+        for (i = 0; i < shoppingCart.cartItems.length; i++) {
+            if (shoppingCart.cartItems[i].name === 'Donut') {
+                donutQty = shoppingCart.cartItems[i].qty;
+            }
+        }
+        console.log(donutQty);
+        if (donutQty === undefined) {
+            console.log('no donuts in cart!');
+            discountAmount = 0;
+        } else {
+            discountAmount = donutQty * discount;
+        }
+    } else {
+        console.log('invalid discount code');
+        discountAmount = 0;
+    }
+    console.log(discountAmount);
+    return discountAmount;
+}
+
+
 // ========== function to calculate shopping cart discount =========== //
-
-function updateCartDiscount() {
-
+function updateCartDiscount(discount) {
+    shoppingCart.cartDiscount = discount;
 }
 
 // ========= function to calculate shopping cart total ============== //
-
 function updateCartTotal() {
     shoppingCart.cartTotal = shoppingCart.cartSubtotal - shoppingCart.cartDiscount;
 }
 
 // ======= function to write innerHTML of cart subtotal, discount, and total ==== //
-
 function writeCartTotals() {
     var subtotalAmt = document.getElementById('subtotalAmt');
     var discountAmt = document.getElementById('discountAmt');
@@ -263,7 +329,6 @@ function writeCartTotals() {
 }
 
 // ========= function to generate plate row from cartItems object =========== //
-
 function makePlateRow(item) {
     // create the HTML structure of the plate row
     var itemRow = document.createElement('div');
@@ -302,12 +367,16 @@ function makePlateRow(item) {
 
     // add event listener for remove button
     removeBtn.firstChild.addEventListener('click', function(event) {
+        var discountInput = document.getElementById('discount_code');
         var itemIndex = shoppingCart.cartItems.indexOf(item);
         console.log(itemIndex);
         plate.removeChild(itemRow);
         shoppingCart.cartItems.splice(itemIndex, 1);
         updateCartSubtotal();
+        updateCartDiscount(0); // reset cart discount on item removal
+        discountInput.value = '';
         updateCartTotal();
+        numOfItemsInCart();
         writeCartTotals();
     });
 
@@ -321,10 +390,6 @@ function makePlateRow(item) {
     return itemRow;
 }
 
-// ========== call activatePage function ======= //
-
-activatePage();
-
 // ========= add event listener for plate quantity changes === //
 function plateQtyEvent() {
     var i;
@@ -336,3 +401,27 @@ function plateQtyEvent() {
 
     }
 }
+
+// ========== function to control the item_in_cart_num display ====== //
+function numOfItemsInCart() {
+    var numberOfItems = 0;
+    var itemInCartNumDiv = document.getElementById('item_in_cart_num');
+    shoppingCart.cartItems.forEach(function(item) {
+        numberOfItems += item.qty;
+    });
+    if (numberOfItems > 0) {
+        itemInCartNumDiv.className = 'shown';
+    } else {
+        itemInCartNumDiv.className = 'hidden';
+    }
+    itemInCartNumDiv.innerHTML = numberOfItems;
+}
+
+
+
+
+
+
+
+// ========== call activatePage function ======= //
+activatePage();
