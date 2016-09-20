@@ -143,6 +143,7 @@ sally smith image styles
 
 #discount_message {
     padding-right: 0;
+    text-align: right;
 }
 
 /* --------------------
@@ -301,9 +302,6 @@ Shopping Cart styles
     visibility: hidden;
 }
 
-#discount_alert {
-    clear: both;
-}
 
 .subtotal {
     margin-bottom: 1em;
@@ -318,6 +316,7 @@ Shopping Cart styles
 input#discount_code {
     height: 2.5em;
     width: 15em;
+    margin-left: 0.75em;
     padding-left: 0.25em;
     border: none;
     border-radius: 3px 0px 0px 3px;
@@ -433,6 +432,7 @@ Button styling
 #discount_button {
     border: none;
     margin-left: -0.313em;
+    margin-top: 0;
     height: 2.5em;
     border-radius: 0px 3px 3px 0px;
     padding: 0.438em;
