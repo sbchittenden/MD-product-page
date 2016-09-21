@@ -66,7 +66,7 @@ function activatePage() {
     });
 
     // ====== event listener for click on #blackout div (off of cart) ===== //
-    fade.addEventListener('click', function(){
+    fade.addEventListener('click', function() {
         breakfastPlate.className = 'hide';
         fade.className = 'hide';
     });
@@ -323,6 +323,7 @@ function getDiscount(code) {
 
 // ========== function to calculate shopping cart discount =========== //
 function updateCartDiscount(discount) {
+    // update the shopping cart object discount amount
     shoppingCart.cartDiscount = discount;
 }
 
@@ -335,11 +336,18 @@ function updateCartTotal() {
 function writeCartTotals() {
     var subtotalAmt = document.getElementById('subtotalAmt');
     var discountAmt = document.getElementById('discountAmt');
+    var discountMessage = document.getElementById('discount_message');
     var totalAmt = document.getElementById('totalAmt');
 
     subtotalAmt.innerHTML = '$' + shoppingCart.cartSubtotal.toFixed(2);
     discountAmt.innerHTML = '- $' + shoppingCart.cartDiscount.toFixed(2);
     totalAmt.innerHTML = '$' + shoppingCart.cartTotal.toFixed(2);
+
+    if (shoppingCart.activeCode === undefined) {
+        discount_message.innerHTML = '';
+    } else {
+        discount_message.innerHTML = shoppingCart.activeCode + ' has been applied to your plate.';
+    }
 }
 
 // ========= function to generate plate row from cartItems object =========== //

@@ -144,6 +144,8 @@ sally smith image styles
 #discount_message {
     padding-right: 0;
     text-align: right;
+    font-size: 0.75em;
+    color: #87D37C;
 }
 
 /* --------------------
