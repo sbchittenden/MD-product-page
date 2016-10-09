@@ -1,3 +1,4 @@
+(function(window) {
 // ========== shopping cart object =========== //
 var shoppingCart = {
     discountCodes: {
@@ -444,3 +445,5 @@ function numOfItemsInCart() {
 
 // ========== call activatePage function ======= //
 activatePage();
+
+})(window);
